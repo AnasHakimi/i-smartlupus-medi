@@ -52,26 +52,29 @@ export default function DashboardPage() {
   if (!profile) return null;
 
   return (
-    <div className="space-y-6">
-      <div>
+    <div>
+      {/* Header — generous spacing below for hierarchy */}
+      <div className="mb-8">
         <h1 className="text-2xl font-black text-slate-900">
           {roleTitle[profile.role]}
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 mt-1.5">
           Selamat datang, {profile.full_name}
         </p>
       </div>
 
+      {/* Stat cards — tighter gap between related items */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard label="Jumlah" value={counts.total} icon={<ClipboardList size={22} />} color="blue" />
-        <StatCard label="Menunggu" value={counts.menunggu_semakan} icon={<Clock size={22} />} color="yellow" />
-        <StatCard label="Proses" value={counts.proses_pelupusan} icon={<AlertTriangle size={22} />} color="orange" />
-        <StatCard label="Selesai" value={counts.selesai} icon={<CheckCircle size={22} />} color="green" />
+        <StatCard label="Jumlah" value={counts.total} icon={<ClipboardList size={20} />} color="blue" />
+        <StatCard label="Menunggu" value={counts.menunggu_semakan} icon={<Clock size={20} />} color="yellow" />
+        <StatCard label="Proses" value={counts.proses_pelupusan} icon={<AlertTriangle size={20} />} color="orange" />
+        <StatCard label="Selesai" value={counts.selesai} icon={<CheckCircle size={20} />} color="green" />
       </div>
 
+      {/* Ditolak — separated with larger gap since it's conditional/secondary */}
       {counts.ditolak > 0 && (
-        <div className="max-w-xs">
-          <StatCard label="Ditolak" value={counts.ditolak} icon={<XCircle size={22} />} color="red" />
+        <div className="mt-4 max-w-xs">
+          <StatCard label="Ditolak" value={counts.ditolak} icon={<XCircle size={20} />} color="red" />
         </div>
       )}
     </div>

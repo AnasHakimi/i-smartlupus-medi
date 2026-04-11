@@ -2,14 +2,14 @@ import { cn } from "@/lib/utils";
 
 const colorMap: Record<
   NonNullable<StatCardProps["color"]>,
-  { container: string; icon: string }
+  { bg: string; iconBg: string; icon: string; value: string }
 > = {
-  blue:   { container: "bg-blue-50",   icon: "text-blue-600" },
-  yellow: { container: "bg-yellow-50", icon: "text-yellow-600" },
-  orange: { container: "bg-orange-50", icon: "text-orange-600" },
-  green:  { container: "bg-green-50",  icon: "text-green-600" },
-  red:    { container: "bg-red-50",    icon: "text-red-600" },
-  slate:  { container: "bg-slate-50",  icon: "text-slate-600" },
+  blue:   { bg: "bg-blue-50/60",   iconBg: "bg-blue-100",   icon: "text-blue-600",   value: "text-blue-900" },
+  yellow: { bg: "bg-yellow-50/60", iconBg: "bg-yellow-100", icon: "text-yellow-600", value: "text-yellow-900" },
+  orange: { bg: "bg-orange-50/60", iconBg: "bg-orange-100", icon: "text-orange-600", value: "text-orange-900" },
+  green:  { bg: "bg-green-50/60",  iconBg: "bg-green-100",  icon: "text-green-600",  value: "text-green-900" },
+  red:    { bg: "bg-red-50/60",    iconBg: "bg-red-100",    icon: "text-red-600",    value: "text-red-900" },
+  slate:  { bg: "bg-slate-50/60",  iconBg: "bg-slate-100",  icon: "text-slate-600",  value: "text-slate-900" },
 };
 
 interface StatCardProps {
@@ -25,24 +25,27 @@ export default function StatCard({
   icon,
   color = "slate",
 }: StatCardProps) {
-  const colors = colorMap[color];
+  const c = colorMap[color];
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm hover:shadow-md transition-shadow flex items-center gap-4">
-      <div
-        className={cn(
-          "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
-          colors.container,
-          colors.icon,
-        )}
-      >
-        {icon}
-      </div>
-      <div>
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-          {label}
-        </p>
-        <p className="text-2xl font-black text-slate-900">{value}</p>
+    <div className={cn("rounded-2xl p-5 transition-all", c.bg)}>
+      <div className="flex items-center gap-4">
+        <div
+          className={cn(
+            "w-11 h-11 rounded-xl flex items-center justify-center shrink-0",
+            c.iconBg, c.icon,
+          )}
+        >
+          {icon}
+        </div>
+        <div>
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            {label}
+          </p>
+          <p className={cn("text-2xl font-black tabular-nums", c.value)}>
+            {value.toLocaleString()}
+          </p>
+        </div>
       </div>
     </div>
   );

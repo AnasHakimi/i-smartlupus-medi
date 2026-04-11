@@ -11,35 +11,24 @@ interface TicketCardProps {
 export default function TicketCard({ ticket }: TicketCardProps) {
   return (
     <Link href={`/semua/${ticket.id}`}>
-      <div className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm hover:shadow-md hover:border-blue-200 transition-all flex items-center gap-3">
-        {/* Main content */}
+      <div className="group flex items-center gap-3 rounded-xl bg-white px-4 py-3.5 border border-slate-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all">
         <div className="flex-1 min-w-0">
-          {/* Ticket number + status */}
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-0.5">
             <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">
               {ticket.ticket_no}
             </span>
             <StatusBadge status={ticket.status} />
           </div>
-
-          {/* Asset name */}
-          <p className="text-sm font-bold text-slate-900 truncate">
+          <p className="text-sm font-semibold text-slate-800 truncate">
             {ticket.asset_name}
           </p>
-
-          {/* Unit / location */}
-          <p className="text-xs text-slate-400 mt-0.5 truncate">
-            {ticket.location}
-          </p>
-
-          {/* Created date */}
-          <p className="text-[10px] text-slate-300 mt-1">
-            {formatDate(ticket.created_at)}
-          </p>
+          <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400">
+            {ticket.location && <span>{ticket.location}</span>}
+            {ticket.location && <span>·</span>}
+            <span>{formatDate(ticket.created_at)}</span>
+          </div>
         </div>
-
-        {/* Chevron */}
-        <ChevronRight size={16} className="text-slate-300 shrink-0" />
+        <ChevronRight size={18} className="text-slate-300 group-hover:text-blue-400 shrink-0 transition-colors" />
       </div>
     </Link>
   );
