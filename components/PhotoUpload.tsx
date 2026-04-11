@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import NextImage from "next/image";
 import { Camera, X } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -75,7 +76,9 @@ export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) 
     <div className="w-full">
       {preview ? (
         <div className="relative rounded-xl overflow-hidden">
-          <img src={preview} alt="Preview" className="w-full object-cover max-h-64" />
+          <div className="relative w-full h-48 rounded-xl overflow-hidden">
+            <NextImage src={preview} alt="Pratonton foto aset" fill className="object-cover" unoptimized />
+          </div>
           <button
             type="button"
             onClick={handleRemove}

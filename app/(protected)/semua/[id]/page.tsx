@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, FileText, Camera } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
@@ -105,7 +106,9 @@ export default function TicketDetailPage() {
               <Camera size={14} className="text-slate-400" />
               <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Foto Aset</p>
             </div>
-            <img src={ticket.image_url} alt="Foto aset" className="w-full rounded-xl object-cover" />
+            <div className="relative w-full h-48 rounded-xl overflow-hidden">
+              <Image src={ticket.image_url} alt="Foto aset" fill className="object-cover" unoptimized />
+            </div>
           </div>
         )}
 
