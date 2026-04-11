@@ -30,12 +30,13 @@ export default function StatusPage() {
   }, []);
 
   if (loading) return (
-    <div className="space-y-6">
+    <div className="space-y-6" role="status">
       <div>
         <h1 className="text-2xl font-black text-slate-900">Status Permohonan</h1>
         <p className="text-sm text-slate-500 mt-1">Senarai permohonan pelupusan anda</p>
       </div>
       <TicketListSkeleton count={4} />
+      <span className="sr-only">Memuatkan senarai permohonan...</span>
     </div>
   );
 

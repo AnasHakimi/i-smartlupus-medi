@@ -10,6 +10,7 @@ async function compressImage(file: File, maxWidth = 800, quality = 0.7): Promise
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
+      URL.revokeObjectURL(img.src);
       const canvas = document.createElement("canvas");
       const ratio = Math.min(maxWidth / img.width, 1);
       canvas.width = img.width * ratio;
@@ -82,7 +83,7 @@ export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) 
           <button
             type="button"
             onClick={handleRemove}
-            className="absolute top-2 right-2 bg-white rounded-full p-2.5 shadow-md"
+            className="absolute top-2 right-2 bg-white rounded-full p-3.5 shadow-md"
             aria-label="Buang gambar"
           >
             <X className="h-4 w-4 text-slate-700" />

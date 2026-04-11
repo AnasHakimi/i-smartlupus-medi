@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FileText } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
@@ -102,6 +103,7 @@ function generateCertPdf(ticket: DisposalTicket, officerName: string): Blob {
 }
 
 export default function CertificateGenerator({ ticket, officerName }: Props) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   // Only render when ticket is selesai AND cert_url is not yet generated
@@ -157,9 +159,9 @@ export default function CertificateGenerator({ ticket, officerName }: Props) {
 
       if (logError) throw logError;
 
-      // 7. Toast + reload
+      // 7. Toast + refresh
       toast.success("Sijil pelupusan berjaya dijana!");
-      window.location.reload();
+      router.refresh();
     } catch {
       // Error logged silently — toast already shown to user
       toast.error("Gagal menjana sijil. Sila cuba semula.");

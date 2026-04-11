@@ -129,8 +129,9 @@ export default function SemakanPage() {
 
       {/* Content */}
       {loading ? (
-        <div className="flex justify-center py-20">
+        <div className="flex justify-center py-20" role="status">
           <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
+          <span className="sr-only">Memuatkan...</span>
         </div>
       ) : tickets.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
