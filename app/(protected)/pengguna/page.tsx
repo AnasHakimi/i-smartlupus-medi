@@ -75,38 +75,32 @@ export default function PenggunaPage() {
     setSubmitting(true);
 
     try {
-      const { data: signUpData, error: signUpError } =
-        await supabase.auth.signUp({
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           email: icToEmail(cleanIc),
           password,
-        });
-
-      if (signUpError) {
-        toast.error(signUpError.message);
-        return;
-      }
-
-      if (signUpData.user) {
-        const { error: profileError } = await supabase.from("profiles").insert({
-          id: signUpData.user.id,
           ic_number: cleanIc,
           full_name: fullName.trim(),
           role,
           unit_name: unitName.trim() || null,
-        });
+        }),
+      });
 
-        if (profileError) {
-          toast.error(`Ralat profil: ${profileError.message}`);
-          return;
-        }
+      const result = await res.json();
 
-        toast.success(`${fullName.trim()} berjaya didaftarkan!`);
-        resetForm();
-        setShowForm(false);
-        await loadProfiles();
-      } else {
-        toast.error("Pendaftaran gagal. Cuba semula.");
+      if (!res.ok) {
+        toast.error(result.error || "Pendaftaran gagal. Cuba semula.");
+        return;
       }
+
+      toast.success(`${fullName.trim()} berjaya didaftarkan!`);
+      resetForm();
+      setShowForm(false);
+      await loadProfiles();
+    } catch {
+      toast.error("Ralat tidak dijangka. Sila cuba semula.");
     } finally {
       setSubmitting(false);
     }
