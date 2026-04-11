@@ -160,8 +160,8 @@ export default function CertificateGenerator({ ticket, officerName }: Props) {
       // 7. Toast + reload
       toast.success("Sijil pelupusan berjaya dijana!");
       window.location.reload();
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // Error logged silently — toast already shown to user
       toast.error("Gagal menjana sijil. Sila cuba semula.");
     } finally {
       setLoading(false);

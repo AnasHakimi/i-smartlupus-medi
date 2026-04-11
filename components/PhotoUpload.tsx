@@ -59,8 +59,8 @@ export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) 
       setPreview(publicUrl);
       onUploaded(publicUrl);
       toast.success("Foto berjaya dimuat naik.");
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // Error logged silently — toast already shown to user
       toast.error("Gagal memuat naik foto.");
     } finally {
       setLoading(false);

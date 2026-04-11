@@ -38,7 +38,7 @@ export default function BottomNav({ role }: BottomNavProps) {
   const items = NAV_ITEMS[role];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t bg-white md:hidden">
+    <nav aria-label="Menu utama" className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t bg-white md:hidden">
       <div className="flex h-full items-center justify-around">
         {items.map((item) => {
           const Icon = ICON_MAP[item.icon] ?? Home;
@@ -48,7 +48,9 @@ export default function BottomNav({ role }: BottomNavProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center gap-0.5 px-3 ${
+              aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
+              className={`flex flex-col items-center justify-center gap-0.5 px-3 min-h-[48px] ${
                 isActive ? "text-blue-600" : "text-slate-400"
               }`}
             >

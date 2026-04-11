@@ -28,6 +28,18 @@
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+
+  /* Consistent focus ring for keyboard navigation (accessibility) */
+  :focus-visible {
+    outline: 2px solid oklch(0.55 0.18 250);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  /* Remove default focus for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 @layer utilities {

@@ -82,8 +82,8 @@ export default function TicketActions({ ticket }: Props) {
 
       toast.success(`${ticketRef} telah diselesaikan!`);
       router.refresh();
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // Error logged silently — toast already shown to user
       toast.error("Ralat berlaku. Sila cuba semula.");
     } finally {
       setLoading(false);

@@ -48,7 +48,7 @@ export default function Sidebar({ role, name }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+      <nav aria-label="Menu utama" className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
         {items.map((item) => {
           const Icon = ICON_MAP[item.icon] ?? Home;
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -57,7 +57,8 @@ export default function Sidebar({ role, name }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
+              aria-current={isActive ? "page" : undefined}
+              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                 isActive
                   ? "bg-blue-50 text-blue-700"
                   : "text-slate-600 hover:bg-slate-50"
