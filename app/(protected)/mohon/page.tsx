@@ -76,7 +76,7 @@ export default function MohonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
+    <div className="min-h-screen bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-lg">
         {/* Header */}
         <div className="mb-8 flex items-center gap-4">
@@ -84,23 +84,23 @@ export default function MohonPage() {
             <Package className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-slate-900">
               Permohonan Baru
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               Mohon pelupusan aset perubatan
             </p>
           </div>
         </div>
 
         {/* Form Card */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Nama Aset */}
             <div className="space-y-1.5">
               <label
                 htmlFor="asset-name"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-slate-700"
               >
                 Nama Aset{" "}
                 <span className="text-red-500" aria-hidden="true">
@@ -114,7 +114,7 @@ export default function MohonPage() {
                 value={assetName}
                 onChange={(e) => setAssetName(e.target.value)}
                 placeholder="Cth: Kerusi Roda Pesakit"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -122,7 +122,7 @@ export default function MohonPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="inventory-id"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-slate-700"
               >
                 No. Inventori
               </label>
@@ -132,13 +132,13 @@ export default function MohonPage() {
                 value={inventoryId}
                 onChange={(e) => setInventoryId(e.target.value)}
                 placeholder="Cth: INV-2024-001"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
             {/* Keadaan Aset */}
             <div className="space-y-1.5">
-              <span className="block text-sm font-medium text-gray-700">
+              <span className="block text-sm font-medium text-slate-700">
                 Keadaan Aset{" "}
                 <span className="text-red-500" aria-hidden="true">
                   *
@@ -155,7 +155,7 @@ export default function MohonPage() {
                         "flex-1 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors",
                         assetCondition === condition
                           ? "border-blue-600 bg-blue-600 text-white"
-                          : "border-gray-300 bg-white text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                          : "border-slate-300 bg-white text-slate-700 hover:border-blue-400 hover:text-blue-600"
                       )}
                     >
                       {ASSET_CONDITIONS[condition]}
@@ -169,7 +169,7 @@ export default function MohonPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="location"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-slate-700"
               >
                 Lokasi
               </label>
@@ -179,7 +179,7 @@ export default function MohonPage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="Cth: Wad 3A, Tingkat 2"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 

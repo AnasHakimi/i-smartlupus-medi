@@ -56,7 +56,7 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold text-blue-600 tracking-wide">
             i-SMARTLUPUS
           </h1>
-          <p className="text-sm text-gray-500 mt-1 text-center">
+          <p className="text-sm text-slate-500 mt-1 text-center">
             Sistem Pelupusan Aset Perubatan
           </p>
         </div>
@@ -67,13 +67,13 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="ic"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-slate-700 mb-1"
             >
               No. Kad Pengenalan
             </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <CreditCard className="w-5 h-5 text-gray-400" />
+                <CreditCard className="w-5 h-5 text-slate-400" />
               </span>
               <input
                 id="ic"
@@ -85,7 +85,7 @@ export default function LoginPage() {
                 maxLength={12}
                 autoComplete="username"
                 required
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
               />
             </div>
           </div>
@@ -94,7 +94,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-slate-700 mb-1"
             >
               Kata Laluan
             </label>
@@ -107,12 +107,12 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base pr-12"
+                className="w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base pr-12"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
                 tabIndex={-1}
                 aria-label={showPassword ? "Sembunyikan kata laluan" : "Tunjukkan kata laluan"}
               >
@@ -136,7 +136,7 @@ export default function LoginPage() {
         </form>
 
         {/* Footer */}
-        <p className="text-center text-xs text-gray-400 mt-8">
+        <p className="text-center text-xs text-slate-400 mt-8">
           &copy; 2026 i-SMARTLUPUS MEDI
         </p>
       </div>

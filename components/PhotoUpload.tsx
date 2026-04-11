@@ -85,7 +85,7 @@ export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) 
             className="absolute top-2 right-2 bg-white rounded-full p-2.5 shadow-md"
             aria-label="Buang gambar"
           >
-            <X className="h-4 w-4 text-gray-700" />
+            <X className="h-4 w-4 text-slate-700" />
           </button>
         </div>
       ) : (
@@ -93,7 +93,7 @@ export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) 
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={loading}
-          className="w-full flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 py-8 text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
+          className="w-full flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 py-8 text-slate-500 hover:border-slate-400 hover:text-slate-600 transition-colors disabled:opacity-50"
         >
           <Camera className="h-8 w-8" />
           <span className="text-sm font-medium">
