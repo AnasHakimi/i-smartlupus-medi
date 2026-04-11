@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -10,16 +12,60 @@ export async function POST(request: Request) {
     );
   }
 
+  // Verify the caller is an authenticated admin
+  const cookieStore = await cookies();
+  const supabaseAuth = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll() {},
+      },
+    },
+  );
+
+  const {
+    data: { user: caller },
+  } = await supabaseAuth.auth.getUser();
+
+  if (!caller) {
+    return NextResponse.json({ error: "Tidak dibenarkan." }, { status: 401 });
+  }
+
+  const { data: callerProfile } = await supabaseAuth
+    .from("profiles")
+    .select("role")
+    .eq("id", caller.id)
+    .single();
+
+  if (!callerProfile || callerProfile.role !== "admin") {
+    return NextResponse.json(
+      { error: "Hanya pentadbir boleh mendaftar pengguna." },
+      { status: 403 },
+    );
+  }
+
+  // Validate request body
+  const body = await request.json();
+  const { email, password, full_name, ic_number, role, unit_name } = body;
+
+  if (!email || !password || !full_name || !ic_number || !role) {
+    return NextResponse.json(
+      { error: "Maklumat tidak lengkap." },
+      { status: 400 },
+    );
+  }
+
+  // Create user via Admin API (no session switch)
   const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     serviceRoleKey,
     { auth: { autoRefreshToken: false, persistSession: false } },
   );
 
-  const body = await request.json();
-  const { email, password, full_name, ic_number, role, unit_name } = body;
-
-  // Create user via Admin API (no session switch)
   const { data: authData, error: authError } =
     await supabaseAdmin.auth.admin.createUser({
       email,
