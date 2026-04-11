@@ -21,6 +21,13 @@ export default function SemuaPage() {
   const [tickets, setTickets] = useState<DisposalTicket[]>([]);
   const [statusFilter, setStatusFilter] = useState<FilterValue>("all");
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  // Debounce search input by 300ms
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -42,7 +49,7 @@ export default function SemuaPage() {
     const matchesStatus =
       statusFilter === "all" || ticket.status === statusFilter;
 
-    const query = search.toLowerCase();
+    const query = debouncedSearch.toLowerCase();
     const matchesSearch =
       !query ||
       ticket.ticket_no.toLowerCase().includes(query) ||
