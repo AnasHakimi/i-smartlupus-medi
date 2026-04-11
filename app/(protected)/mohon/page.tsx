@@ -79,18 +79,14 @@ export default function MohonPage() {
     <div className="min-h-screen bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-lg">
         {/* Header */}
-        <div className="mb-8 flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600">
-            <Package className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">
-              Permohonan Baru
-            </h1>
-            <p className="text-sm text-slate-500">
-              Mohon pelupusan aset perubatan
-            </p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <Package className="h-6 w-6 text-blue-600" />
+            Permohonan Baru
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Mohon pelupusan aset perubatan
+          </p>
         </div>
 
         {/* Form Card */}
@@ -114,7 +110,7 @@ export default function MohonPage() {
                 value={assetName}
                 onChange={(e) => setAssetName(e.target.value)}
                 placeholder="Cth: Kerusi Roda Pesakit"
-                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-300 px-3 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -132,7 +128,7 @@ export default function MohonPage() {
                 value={inventoryId}
                 onChange={(e) => setInventoryId(e.target.value)}
                 placeholder="Cth: INV-2024-001"
-                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-300 px-3 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -152,7 +148,7 @@ export default function MohonPage() {
                       type="button"
                       onClick={() => setAssetCondition(condition)}
                       className={cn(
-                        "flex-1 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors",
+                        "flex-1 rounded-lg border px-4 py-3 text-sm font-medium transition-colors",
                         assetCondition === condition
                           ? "border-blue-600 bg-blue-600 text-white"
                           : "border-slate-300 bg-white text-slate-700 hover:border-blue-400 hover:text-blue-600"
@@ -179,7 +175,7 @@ export default function MohonPage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="Cth: Wad 3A, Tingkat 2"
-                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-300 px-3 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 

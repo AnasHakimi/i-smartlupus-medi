@@ -50,13 +50,11 @@ export default function LoginPage() {
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg border border-blue-100 p-8">
         {/* Logo area */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-md mb-4">
-            <KeyRound className="text-white w-8 h-8" />
-          </div>
-          <h1 className="text-2xl font-bold text-blue-600 tracking-wide">
+          <h1 className="text-2xl font-black text-blue-600 tracking-wide flex items-center gap-2">
+            <KeyRound className="w-6 h-6" />
             i-SMARTLUPUS
           </h1>
-          <p className="text-sm text-slate-500 mt-1 text-center">
+          <p className="text-sm text-slate-500 mt-1.5 text-center">
             Sistem Pelupusan Aset Perubatan
           </p>
         </div>
