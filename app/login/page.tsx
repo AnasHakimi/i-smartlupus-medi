@@ -46,7 +46,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center px-4 py-12">
+    <main className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg border border-blue-100 p-8">
         {/* Logo area */}
         <div className="flex flex-col items-center mb-8">
@@ -113,7 +113,6 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
-                tabIndex={-1}
                 aria-label={showPassword ? "Sembunyikan kata laluan" : "Tunjukkan kata laluan"}
               >
                 {showPassword ? (

@@ -64,11 +64,13 @@ export default function SemuaPage() {
 
       {/* Search bar */}
       <div className="relative mb-4">
+        <label htmlFor="search-tickets" className="sr-only">Cari tiket</label>
         <Search
           size={16}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
         />
         <input
+          id="search-tickets"
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
