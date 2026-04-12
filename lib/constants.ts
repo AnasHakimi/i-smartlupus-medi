@@ -4,6 +4,11 @@ export const STATUS_CONFIG: Record<
   TicketStatus,
   { label: string; color: string; bg: string }
 > = {
+  BARU: {
+    label: "BARU",
+    color: "text-blue-700",
+    bg: "bg-blue-100",
+  },
   menunggu_semakan: {
     label: "Menunggu Semakan",
     color: "text-yellow-700",

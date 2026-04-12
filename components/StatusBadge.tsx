@@ -12,7 +12,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
   return (
     <span
       className={cn(
-        "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
+        "px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wide",
         config.bg,
         config.color,
       )}

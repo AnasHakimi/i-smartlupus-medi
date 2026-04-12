@@ -3,6 +3,7 @@ export type UserRole = "user" | "unit_aset" | "admin";
 export type AssetCondition = "rosak" | "usang";
 
 export type TicketStatus =
+  | "BARU"
   | "menunggu_semakan"
   | "proses_pelupusan"
   | "selesai"
