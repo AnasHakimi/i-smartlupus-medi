@@ -50,12 +50,14 @@ export default function BottomNav({ role }: BottomNavProps) {
               href={item.href}
               aria-label={item.label}
               aria-current={isActive ? "page" : undefined}
-              className={`flex flex-col items-center justify-center gap-0.5 px-3 min-h-[48px] ${
-                isActive ? "text-blue-600" : "text-slate-400"
-              }`}
+              className={`flex flex-col items-center justify-center gap-1.5 px-4 min-h-[56px] ${
+                isActive ? "text-blue-600 bg-blue-50/50" : "text-slate-500"
+              } transition-colors rounded-lg`}
             >
-              <Icon className="h-6 w-6" />
-              <span className="text-[10px] font-bold">{item.label}</span>
+              <Icon className={isActive ? "h-6 w-6 stroke-[2.5]" : "h-6 w-6 stroke-[2]"} />
+              <span className={`text-[11px] font-bold tracking-tight ${isActive ? "opacity-100" : "opacity-80"}`}>
+                {item.label}
+              </span>
             </Link>
           );
         })}
