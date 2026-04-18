@@ -38,4 +38,7 @@ next-env.d.ts
 .impeccable.md
 
 # Shino AI working memory (per-session state, not a project artifact)
-/memory/
+/memory/.superpowers/
+
+# Brainstorm visual companion sessions
+/.superpowers/
