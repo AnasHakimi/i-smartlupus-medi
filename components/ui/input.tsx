@@ -39,7 +39,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               "placeholder:text-[var(--fg-muted)]",
               "disabled:opacity-50 disabled:cursor-not-allowed",
               error && "border-[var(--destructive)]",
-              trailing && "pr-12",
+              !!trailing && "pr-12",
               className,
             )}
             {...rest}
