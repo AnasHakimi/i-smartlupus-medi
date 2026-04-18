@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { NAV_ITEMS, ROLE_LABELS } from "@/lib/constants";
 import type { UserRole } from "@/lib/supabase/types";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Home,
@@ -42,9 +43,12 @@ export default function Sidebar({ role, name }: SidebarProps) {
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-40 border-r bg-white">
       {/* Header */}
-      <div className="flex flex-col px-6 py-5 border-b">
-        <span className="text-lg font-black text-blue-600">i-SMARTLUPUS</span>
-        <span className="text-xs text-slate-500 mt-0.5">{roleLabel}</span>
+      <div className="flex items-start justify-between gap-2 px-6 py-5 border-b">
+        <div className="flex flex-col min-w-0">
+          <span className="text-lg font-black text-blue-600">i-SMARTLUPUS</span>
+          <span className="text-xs text-slate-500 mt-0.5">{roleLabel}</span>
+        </div>
+        <ThemeToggle />
       </div>
 
       {/* Navigation */}

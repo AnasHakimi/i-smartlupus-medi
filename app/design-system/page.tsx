@@ -57,7 +57,7 @@ export default function DesignSystemPage() {
             <span aria-hidden className="text-white/50">/</span>
             <span className="text-white">Primitive Demo</span>
           </div>
-          <ThemeToggle />
+          <ThemeToggle surface="brand" />
         </div>
       </header>
 

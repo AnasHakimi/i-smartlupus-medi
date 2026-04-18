@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import type { UserRole } from "@/lib/supabase/types";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Home,
@@ -50,7 +51,7 @@ export default function BottomNav({ role }: BottomNavProps) {
               href={item.href}
               aria-label={item.label}
               aria-current={isActive ? "page" : undefined}
-              className={`flex flex-col items-center justify-center gap-1.5 px-4 min-h-[56px] ${
+              className={`flex flex-col items-center justify-center gap-1.5 px-3 min-h-[56px] ${
                 isActive ? "text-blue-600 bg-blue-50/50" : "text-slate-500"
               } transition-colors rounded-lg`}
             >
@@ -61,6 +62,9 @@ export default function BottomNav({ role }: BottomNavProps) {
             </Link>
           );
         })}
+        <div className="pl-1 ml-1 border-l border-slate-200 h-8 flex items-center">
+          <ThemeToggle />
+        </div>
       </div>
     </nav>
   );
