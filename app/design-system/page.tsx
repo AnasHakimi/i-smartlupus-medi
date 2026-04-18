@@ -25,21 +25,15 @@ export default function DesignSystemPage() {
 
       <section className="space-y-4">
         <h2 className="text-title-2 font-semibold">Buttons</h2>
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
             <p className="text-footnote text-[var(--fg-muted)] mb-2">
-              <code>size=&quot;lg&quot;</code> · 48px · hero CTA (login submit, form bottom bar)
+              <code>size=&quot;md&quot;</code> (default) · 36px · dense inline — use this almost always
             </p>
-            <Button size="lg">Hantar Permohonan</Button>
-          </div>
-          <div>
-            <p className="text-footnote text-[var(--fg-muted)] mb-2">
-              <code>size=&quot;md&quot;</code> (default) · 44px · inline button (Apple HIG standard)
-            </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               <Button>Primary</Button>
               <Button variant="secondary">Secondary</Button>
-              <Button variant="destructive"><Trash2 className="h-4 w-4" />Padam</Button>
+              <Button variant="destructive"><Trash2 className="h-3.5 w-3.5" />Padam</Button>
               <Button variant="ghost">Ghost</Button>
               <Button disabled>Disabled</Button>
               <Button loading>Loading</Button>
@@ -47,7 +41,13 @@ export default function DesignSystemPage() {
           </div>
           <div>
             <p className="text-footnote text-[var(--fg-muted)] mb-2">
-              <code>size=&quot;sm&quot;</code> · 36px · dense inline action (table rows, card toolbars)
+              <code>size=&quot;lg&quot;</code> · 48px · full-width sticky submit (login, form bottom bar)
+            </p>
+            <Button size="lg" className="w-full sm:w-auto">Hantar Permohonan</Button>
+          </div>
+          <div>
+            <p className="text-footnote text-[var(--fg-muted)] mb-2">
+              <code>size=&quot;sm&quot;</code> · 32px · ultra-dense (table rows)
             </p>
             <div className="flex flex-wrap gap-2">
               <Button size="sm">Simpan</Button>

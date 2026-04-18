@@ -11,14 +11,19 @@ describe("Button", () => {
     expect(onClick).toHaveBeenCalledOnce();
   });
 
-  it("default md size is 44px (h-11, Apple HIG touch target)", () => {
+  it("default md size is 36px (h-9, dense inline)", () => {
     render(<Button>OK</Button>);
-    expect(screen.getByRole("button")).toHaveClass("h-11");
+    expect(screen.getByRole("button")).toHaveClass("h-9");
   });
 
-  it("lg size uses 48px min-height for hero CTAs", () => {
+  it("lg size uses 48px min-height for full-width sticky submits", () => {
     render(<Button size="lg">Hantar</Button>);
     expect(screen.getByRole("button")).toHaveClass("min-h-touch");
+  });
+
+  it("sm size is 32px (h-8) for ultra-dense rows", () => {
+    render(<Button size="sm">Edit</Button>);
+    expect(screen.getByRole("button")).toHaveClass("h-8");
   });
 
   it("renders destructive variant with destructive background", () => {

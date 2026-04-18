@@ -17,7 +17,9 @@
 
 **Blend:** Apple Reminders / Apple Settings language for forms and lists (flat, zero shadow, solid primary buttons, crisp dividers). Apple Health language for the dashboard (Bento grid, rounded cards, subtle elevation).
 
-**Institutional overrides:** Preserve hospital-context trust cues — stamps (rounded-md) on state chips, never rounded-full pills. 48px touch targets (not iOS's 44pt minimum). Bahasa Melayu UI throughout.
+**Institutional overrides:** Preserve hospital-context trust cues — stamps (rounded-md) on state chips, never rounded-full pills. Bahasa Melayu UI throughout.
+
+**Density override (2026-04-18):** Default button size is 36px (dense) per user preference. The 2026-04-12 audit's 48px floor is overridden for buttons. 48px is reserved for full-width sticky form submits (login/form bottom bar). 8px+ gap between adjacent buttons keeps the effective hit area accessible.
 
 **Dark mode:** Full parity. Not inverted — a separate tuned palette.
 
@@ -170,17 +172,25 @@ fontFamily: {
 
 ### Buttons
 
+Three sizes. **Default (`md`) is dense 36px** — per user design preference, applies to virtually every button in the app.
+
+| Size | Height | Font | Use for |
+|------|--------|------|---------|
+| `md` (default) | 36px (`h-9`) | 14px (`text-subhead`) | Everywhere by default — inline, forms, lists, modal actions |
+| `lg` | 48px (`min-h-touch`) | 16px (`text-body`) | Full-width sticky submit only — login `Hantar`, form bottom-bar CTA |
+| `sm` | 32px (`h-8`) | 13px (`text-footnote`) | Ultra-dense table rows, overflow menus |
+
 ```css
-/* Primary — solid blue, flat, no shadow */
+/* Primary md (default) — solid blue, flat, no shadow */
 .btn-primary {
   background: var(--primary);
   color: var(--on-primary);
-  height: 48px;
-  padding: 0 20px;
+  height: 36px;
+  padding: 0 14px;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 16px;
-  letter-spacing: -0.01em;
+  font-size: 14px;
+  letter-spacing: 0.01em;
   transition: background 200ms ease-out, transform 140ms ease-out;
 }
 .btn-primary:hover { background: var(--primary-hover); }
@@ -188,29 +198,32 @@ fontFamily: {
 .btn-primary:focus-visible { outline: none; box-shadow: var(--shadow-ring); }
 .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* Secondary — tinted, flat */
+/* Secondary — tinted, flat, font-weight 500 */
 .btn-secondary {
   background: rgba(37, 99, 235, 0.08);
   color: var(--primary);
-  /* ...rest matches primary */
+  font-weight: 500;
 }
 
 /* Destructive — red solid */
 .btn-destructive {
   background: var(--destructive);
   color: white;
+  font-weight: 600;
 }
 
-/* Ghost — text only, 44px min tap region via hitSlop */
+/* Ghost — transparent, font-weight 500 */
 .btn-ghost {
   background: transparent;
   color: var(--primary);
-  min-height: 48px;
-  padding: 0 12px;
+  font-weight: 500;
 }
 ```
 
-**Rule:** No gradients. No icon-only buttons without `aria-label`. 48px min height always.
+**Rules:**
+- No gradients. No icon-only buttons without `aria-label`.
+- Maintain 8px+ spacing between adjacent buttons so the 36px default still gets effective 44px hit area.
+- Icon inside 36px button: 14px (`h-3.5 w-3.5`).
 
 ### Cards (Bento — dashboard only)
 

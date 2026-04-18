@@ -22,9 +22,9 @@ const base =
   "disabled:opacity-40 disabled:pointer-events-none";
 
 const sizes: Record<Size, string> = {
-  lg: "min-h-touch px-5 text-body",   // 48px — hero CTA (login submit, form primary)
-  md: "h-11 px-4 text-subhead",       // 44px — default inline button (Apple HIG)
-  sm: "h-9 px-3 text-footnote",       // 36px — dense inline action
+  lg: "min-h-touch px-5 text-body",   // 48px — full-width sticky submit (login, form bottom bar)
+  md: "h-9 px-3.5 text-subhead",      // 36px — default, Anaskimi's preferred density
+  sm: "h-8 px-2.5 text-footnote",     // 32px — ultra-dense inline (table rows)
 };
 
 const variants: Record<Variant, string> = {
