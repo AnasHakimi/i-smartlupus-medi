@@ -1,12 +1,13 @@
 "use client";
 
+import { Monitor, Sun, Moon, type LucideIcon } from "lucide-react";
 import { useTheme, type Theme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 
-const OPTIONS: { value: Theme; label: string }[] = [
-  { value: "system", label: "Sistem" },
-  { value: "light", label: "Terang" },
-  { value: "dark", label: "Gelap" },
+const OPTIONS: { value: Theme; label: string; Icon: LucideIcon }[] = [
+  { value: "system", label: "Sistem", Icon: Monitor },
+  { value: "light",  label: "Terang", Icon: Sun },
+  { value: "dark",   label: "Gelap",  Icon: Moon },
 ];
 
 export function ThemeToggle() {
@@ -18,23 +19,25 @@ export function ThemeToggle() {
       aria-label="Tema paparan"
       className="inline-flex rounded-lg p-1 bg-[var(--surface-elevated)] border border-[var(--border)]"
     >
-      {OPTIONS.map((opt) => {
-        const active = theme === opt.value;
+      {OPTIONS.map(({ value, label, Icon }) => {
+        const active = theme === value;
         return (
           <button
-            key={opt.value}
+            key={value}
             role="radio"
             aria-checked={active}
-            aria-label={opt.label}
-            onClick={() => setTheme(opt.value)}
+            aria-label={label}
+            title={label}
+            onClick={() => setTheme(value)}
             className={cn(
-              "px-3 min-h-[40px] text-subhead font-medium rounded-md transition-colors duration-base ease-ios-out",
+              "inline-flex items-center justify-center w-10 h-10 rounded-md",
+              "transition-colors duration-base ease-ios-out",
               active
                 ? "bg-[var(--surface)] text-[var(--fg)] shadow-sm"
                 : "text-[var(--fg-muted)] hover:text-[var(--fg)]",
             )}
           >
-            {opt.label}
+            <Icon className="h-4 w-4" strokeWidth={active ? 2.25 : 1.75} aria-hidden />
           </button>
         );
       })}

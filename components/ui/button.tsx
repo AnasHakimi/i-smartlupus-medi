@@ -15,28 +15,27 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const base =
-  "inline-flex items-center justify-center gap-2 font-semibold rounded-md " +
+  "inline-flex items-center justify-center gap-2 rounded-md " +
   "transition-[background-color,transform] duration-base ease-ios-out " +
   "active:scale-[0.97] active:duration-fast " +
   "focus-visible:outline-none focus-visible:shadow-ring " +
   "disabled:opacity-40 disabled:pointer-events-none";
 
 const sizes: Record<Size, string> = {
-  md: "min-h-touch px-5 text-body",
+  md: "min-h-touch px-4 text-callout",
   sm: "h-10 px-3 text-subhead",
 };
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-[var(--primary)] text-[var(--on-primary)] hover:bg-[var(--primary-hover)]",
+    "font-semibold bg-[var(--primary)] text-[var(--on-primary)] hover:bg-[var(--primary-hover)]",
   secondary:
-    "bg-[var(--primary-tint)] text-[var(--primary)] hover:bg-[var(--primary-tint)] " +
+    "font-medium bg-[var(--primary-tint)] text-[var(--primary)] " +
     "hover:brightness-95 dark:hover:brightness-110",
   destructive:
-    "bg-[var(--destructive)] text-[var(--on-destructive)] hover:brightness-95 " +
-    "data-variant-destructive",
+    "font-semibold bg-[var(--destructive)] text-[var(--on-destructive)] hover:brightness-95",
   ghost:
-    "bg-transparent text-[var(--primary)] hover:bg-[var(--primary-tint)]",
+    "font-medium bg-transparent text-[var(--primary)] hover:bg-[var(--primary-tint)]",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
