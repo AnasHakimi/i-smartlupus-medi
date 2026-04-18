@@ -10,6 +10,8 @@ import { Chip } from "@/components/ui/chip";
 import { BentoCard } from "@/components/ui/bento-card";
 import { Stat } from "@/components/ui/stat";
 import { ClipboardList, Clock, RefreshCw, CheckCircle2 } from "lucide-react";
+import StatusChart from "@/components/StatusChart";
+import { useTheme } from "@/components/theme-provider";
 import { getGreeting } from "@/lib/greeting";
 
 type Role = Profile["role"];
@@ -45,6 +47,24 @@ const emptyCounts: Counts = {
   ditolak: 0,
 };
 
+// Tailwind 500-level for light, 400-level for dark — consistent with emerald brand.
+function chartColors(mode: "light" | "dark") {
+  if (mode === "dark") {
+    return {
+      menunggu: "#facc15", // yellow-400
+      proses:   "#fb923c", // orange-400
+      selesai:  "#34d399", // emerald-400
+      ditolak:  "#f87171", // red-400
+    };
+  }
+  return {
+    menunggu: "#eab308", // yellow-500
+    proses:   "#f97316", // orange-500
+    selesai:  "#10b981", // emerald-500 (was green-500)
+    ditolak:  "#ef4444", // red-500
+  };
+}
+
 // Role-aware stat labels per dashboard spec §Role variants.
 // Project has 3 roles; spec's 4 roles compressed to fit data model.
 function statLabels(role: Role): { total: string; pending: string; executing: string; done: string } {
@@ -69,6 +89,7 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [counts, setCounts] = useState<Counts>(emptyCounts);
   const [recent, setRecent] = useState<DisposalTicket[]>([]);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     async function load() {
@@ -124,6 +145,14 @@ export default function DashboardPage() {
     );
   }
 
+  const palette = chartColors(resolvedTheme);
+  const chartData = [
+    { name: "Menunggu", value: counts.menunggu_semakan, color: palette.menunggu },
+    { name: "Proses",   value: counts.proses_pelupusan, color: palette.proses },
+    { name: "Selesai",  value: counts.selesai,          color: palette.selesai },
+    { name: "Ditolak",  value: counts.ditolak,          color: palette.ditolak },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Greeting strip — flush, not a card */}
@@ -177,9 +206,13 @@ export default function DashboardPage() {
             <Stat label={statLabels(profile.role).done} value={counts.selesai} />
           </div>
         </BentoCard>
+
+        <BentoCard span={2} className="md:col-span-4">
+          <StatusChart data={chartData} />
+        </BentoCard>
       </div>
 
-      {/* Chart + recent tickets land in Tasks 8, 9. Floating CTA lands in Task 10 */}
+      {/* Recent tickets lands in Task 9. Floating CTA lands in Task 10 */}
     </div>
   );
 }
