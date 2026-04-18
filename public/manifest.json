@@ -1,11 +1,11 @@
 {
-  "name": "i-SMARTLUPUS MEDI",
+  "name": "i-SMARTLUPUS",
   "short_name": "SMARTLUPUS",
   "description": "Sistem Pengurusan Pelupusan Aset Perubatan",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#f8fafc",
-  "theme_color": "#2563eb",
+  "theme_color": "#059669",
   "icons": [
     {
       "src": "/icon-192.png",

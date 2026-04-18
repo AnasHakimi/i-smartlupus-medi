@@ -1,46 +1,32 @@
 "use client";
 
-import { Monitor, Sun, Moon, type LucideIcon } from "lucide-react";
-import { useTheme, type Theme } from "@/components/theme-provider";
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 
-const OPTIONS: { value: Theme; label: string; Icon: LucideIcon }[] = [
-  { value: "system", label: "Sistem", Icon: Monitor },
-  { value: "light",  label: "Terang", Icon: Sun },
-  { value: "dark",   label: "Gelap",  Icon: Moon },
-];
-
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const Icon = isDark ? Sun : Moon;
+  const next = isDark ? "light" : "dark";
+  const label = isDark ? "Tukar kepada tema terang" : "Tukar kepada tema gelap";
 
   return (
-    <div
-      role="radiogroup"
-      aria-label="Tema paparan"
-      className="inline-flex rounded-lg p-1 bg-[var(--surface-elevated)] border border-[var(--border)]"
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isDark}
+      aria-label={label}
+      title={label}
+      onClick={() => setTheme(next)}
+      className={cn(
+        "inline-flex items-center justify-center w-10 h-10 rounded-md",
+        "bg-white/10 text-white hover:bg-white/20 active:bg-white/30",
+        "transition-colors duration-base ease-ios-out",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      )}
     >
-      {OPTIONS.map(({ value, label, Icon }) => {
-        const active = theme === value;
-        return (
-          <button
-            key={value}
-            role="radio"
-            aria-checked={active}
-            aria-label={label}
-            title={label}
-            onClick={() => setTheme(value)}
-            className={cn(
-              "inline-flex items-center justify-center w-10 h-10 rounded-md",
-              "transition-colors duration-base ease-ios-out",
-              active
-                ? "bg-[var(--surface)] text-[var(--fg)] shadow-sm"
-                : "text-[var(--fg-muted)] hover:text-[var(--fg)]",
-            )}
-          >
-            <Icon className="h-4 w-4" strokeWidth={active ? 2.25 : 1.75} aria-hidden />
-          </button>
-        );
-      })}
-    </div>
+      <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+    </button>
   );
 }

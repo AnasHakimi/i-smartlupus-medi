@@ -4,68 +4,72 @@
 
 @layer base {
   :root {
-    /* Light theme (default) */
-    --bg: oklch(0.975 0.006 250);
-    --surface: oklch(1.000 0.003 250);
-    --surface-elevated: oklch(1.000 0.003 250);
-    --fg: oklch(0.200 0.008 250);
-    --fg-muted: oklch(0.530 0.010 250);
-    --border: oklch(0.910 0.010 250);
+    /* Light theme — clean slate neutrals + emerald primary */
+    --bg: oklch(0.975 0.006 160);            /* near-white with hint of green */
+    --surface: oklch(1.000 0.003 160);       /* crisp white cards */
+    --surface-elevated: oklch(0.985 0.008 160);
+    --surface-tinted: oklch(0.955 0.025 160);/* branded tint for hero / feature cards */
+    --fg: oklch(0.200 0.008 160);
+    --fg-muted: oklch(0.530 0.010 160);
+    --border: oklch(0.900 0.012 160);
+    --border-strong: oklch(0.830 0.020 160);
 
-    --primary: #2563EB;
-    --primary-hover: #1D4ED8;
-    --primary-tint: rgba(37, 99, 235, 0.08);
+    --primary: #059669;                      /* emerald-600 */
+    --primary-hover: #047857;                /* emerald-700 */
+    --primary-tint: rgba(5, 150, 105, 0.08);
     --on-primary: #FFFFFF;
 
     --destructive: #DC2626;
     --destructive-tint: rgba(220, 38, 38, 0.08);
     --on-destructive: #FFFFFF;
 
-    /* Workflow chips — mostly blue-tonal, ends punctuated by green/red */
-    --chip-pending-bg: oklch(0.950 0.008 250);   /* slate-100 — waiting, no energy yet */
-    --chip-pending-fg: oklch(0.440 0.010 250);   /* slate-600 */
-    --chip-reviewing-bg: #DBEAFE;                /* blue-100 — attention ON */
-    --chip-reviewing-fg: #1E40AF;                /* blue-800 */
-    --chip-executing-bg: #BFDBFE;                /* blue-200 — deeper active */
-    --chip-executing-fg: #1E3A8A;                /* blue-900 */
-    --chip-done-bg: #D1FAE5;                     /* emerald-100 — crisp completion */
-    --chip-done-fg: #047857;                     /* emerald-700 */
+    /* Workflow chips — emerald progression (pale → deep) tells the story */
+    --chip-pending-bg: oklch(0.950 0.008 160);   /* slate-100 — waiting, no progress */
+    --chip-pending-fg: oklch(0.440 0.010 160);   /* slate-600 */
+    --chip-reviewing-bg: #ECFDF5;                /* emerald-50 — first touch */
+    --chip-reviewing-fg: #065F46;                /* emerald-800 */
+    --chip-executing-bg: #D1FAE5;                /* emerald-100 — active */
+    --chip-executing-fg: #064E3B;                /* emerald-900 */
+    --chip-done-bg: #A7F3D0;                     /* emerald-200 — deepest, completed */
+    --chip-done-fg: #064E3B;                     /* emerald-900 */
     --chip-rejected-bg: #FEE2E2;                 /* red-100 — sharp stop */
     --chip-rejected-fg: #B91C1C;                 /* red-700 */
 
-    --ring: rgba(37, 99, 235, 0.5);
+    --ring: rgba(5, 150, 105, 0.5);
   }
 
   .dark {
-    --bg: oklch(0.130 0.006 250);
-    --surface: oklch(0.200 0.008 250);
-    --surface-elevated: oklch(0.280 0.010 250);
-    --fg: oklch(0.950 0.008 250);
-    --fg-muted: oklch(0.640 0.010 250);
-    --border: oklch(0.280 0.010 250);
+    --bg: oklch(0.130 0.008 160);
+    --surface: oklch(0.200 0.010 160);
+    --surface-elevated: oklch(0.265 0.012 160);
+    --surface-tinted: oklch(0.235 0.025 160); /* branded emerald-tinted surface */
+    --fg: oklch(0.950 0.008 160);
+    --fg-muted: oklch(0.640 0.010 160);
+    --border: oklch(0.290 0.012 160);
+    --border-strong: oklch(0.360 0.020 160);
 
-    --primary: #60A5FA;
-    --primary-hover: #3B82F6;
-    --primary-tint: rgba(96, 165, 250, 0.12);
-    --on-primary: #0F172A;
+    --primary: #34D399;                      /* emerald-400 */
+    --primary-hover: #10B981;                /* emerald-500 */
+    --primary-tint: rgba(52, 211, 153, 0.12);
+    --on-primary: #022C22;                   /* emerald-950 dark text */
 
     --destructive: #F87171;
     --destructive-tint: rgba(248, 113, 113, 0.12);
     --on-destructive: #0F172A;
 
-    /* Dark: same philosophy — tonal blue workflow, green/red punctuation only */
+    /* Dark: emerald progression (light hint → solid glow) */
     --chip-pending-bg: rgba(148, 163, 184, 0.15);  /* slate-400 @ 15% */
     --chip-pending-fg: #94A3B8;                    /* slate-400 */
-    --chip-reviewing-bg: rgba(59, 130, 246, 0.18); /* blue-500 @ 18% */
-    --chip-reviewing-fg: #93C5FD;                  /* blue-300 */
-    --chip-executing-bg: rgba(37, 99, 235, 0.25);  /* blue-600 @ 25% */
-    --chip-executing-fg: #BFDBFE;                  /* blue-200 */
-    --chip-done-bg: rgba(16, 185, 129, 0.18);      /* emerald-500 @ 18% */
-    --chip-done-fg: #6EE7B7;                       /* emerald-300 */
+    --chip-reviewing-bg: rgba(16, 185, 129, 0.12); /* emerald-500 @ 12% */
+    --chip-reviewing-fg: #A7F3D0;                  /* emerald-200 */
+    --chip-executing-bg: rgba(16, 185, 129, 0.22); /* emerald-500 @ 22% */
+    --chip-executing-fg: #6EE7B7;                  /* emerald-300 */
+    --chip-done-bg: rgba(52, 211, 153, 0.35);      /* emerald-400 @ 35% — strongest */
+    --chip-done-fg: #D1FAE5;                       /* emerald-100 */
     --chip-rejected-bg: rgba(239, 68, 68, 0.18);   /* red-500 @ 18% */
     --chip-rejected-fg: #FCA5A5;                   /* red-300 */
 
-    --ring: rgba(96, 165, 250, 0.6);
+    --ring: rgba(52, 211, 153, 0.6);
   }
 
   html {

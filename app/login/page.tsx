@@ -47,10 +47,10 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg border border-blue-100 p-8">
+      <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg border border-emerald-100 p-8">
         {/* Logo area */}
         <div className="flex flex-col items-center mb-8">
-          <h1 className="text-2xl font-black text-blue-600 tracking-wide flex items-center gap-2">
+          <h1 className="text-2xl font-black text-emerald-600 tracking-wide flex items-center gap-2">
             <KeyRound className="w-6 h-6" />
             i-SMARTLUPUS
           </h1>
@@ -83,7 +83,7 @@ export default function LoginPage() {
                 maxLength={12}
                 autoComplete="username"
                 required
-                className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-base"
               />
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
                 required
-                className="w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base pr-12"
+                className="w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-base pr-12"
               />
               <button
                 type="button"
@@ -126,7 +126,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl shadow-md transition-colors duration-150 text-base mt-2"
+            className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl shadow-md transition-colors duration-150 text-base mt-2"
           >
             {loading ? "Memuatkan..." : "Log Masuk"}
           </button>
@@ -134,7 +134,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-xs text-slate-400 mt-8">
-          &copy; 2026 i-SMARTLUPUS MEDI
+          &copy; 2026 i-SMARTLUPUS
         </p>
       </div>
     </main>

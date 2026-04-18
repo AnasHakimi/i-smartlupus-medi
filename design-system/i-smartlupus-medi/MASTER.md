@@ -6,7 +6,7 @@
 
 ---
 
-**Project:** i-SMARTLUPUS MEDI
+**Project:** i-SMARTLUPUS
 **Generated:** 2026-04-18 (corrected from auto-gen — auto-gen picked Neumorphism which conflicts with stated iOS + institutional hybrid direction)
 **Category:** Healthcare PWA · Malaysian government hospital context
 **Direction:** iOS classic (Apple Reminders + Apple Health) with institutional geometry preserved
@@ -31,8 +31,8 @@
 
 | Role | Hex | Tailwind | Usage |
 |------|-----|----------|-------|
-| Primary | `#2563EB` | `blue-600` | Primary buttons, active nav, focus ring |
-| Primary hover | `#1D4ED8` | `blue-700` | Hover state only |
+| Primary | `#059669` | `emerald-600` | Primary buttons, active nav, focus ring, brand header |
+| Primary hover | `#047857` | `emerald-700` | Hover state only |
 | On Primary | `#FFFFFF` | `white` | Text on primary |
 | Destructive | `#DC2626` | `red-600` | Delete, reject, "Tolak" |
 | Background | `#F8FAFC` | `slate-50` | Page background |
@@ -47,8 +47,8 @@
 
 | Role | Hex | Tailwind | Notes |
 |------|-----|----------|-------|
-| Primary | `#60A5FA` | `blue-400` | Elevated, not blue-600 (too low contrast on dark) |
-| On Primary | `#0F172A` | `slate-900` | Dark text on light primary |
+| Primary | `#34D399` | `emerald-400` | Elevated emerald for dark surfaces |
+| On Primary | `#022C22` | `emerald-950` | Dark text on light primary |
 | Destructive | `#F87171` | `red-400` | Elevated red |
 | Background | `#020617` | `slate-950` | Page background |
 | Surface | `#0F172A` | `slate-900` | Cards, sheets |

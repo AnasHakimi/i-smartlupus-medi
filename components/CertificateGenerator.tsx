@@ -55,7 +55,7 @@ function generateCertPdf(ticket: DisposalTicket, officerName: string): Blob {
 
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.text("i-SMARTLUPUS MEDI", 105, 40, { align: "center" });
+  doc.text("i-SMARTLUPUS", 105, 40, { align: "center" });
 
   // Ticket number
   doc.setFontSize(12);

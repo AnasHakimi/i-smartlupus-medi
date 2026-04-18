@@ -1,5 +1,5 @@
 -- ============================================================
--- i-SMARTLUPUS MEDI — Initial Database Schema
+-- i-SMARTLUPUS — Initial Database Schema
 -- Migration: 001_initial_schema.sql
 -- ============================================================
 

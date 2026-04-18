@@ -12,13 +12,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "i-SMARTLUPUS MEDI",
+  title: "i-SMARTLUPUS",
   description: "Sistem Pengurusan Pelupusan Aset Perubatan",
   manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2563eb",
+  themeColor: "#059669",
   width: "device-width",
   initialScale: 1,
 };

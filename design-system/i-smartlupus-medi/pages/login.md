@@ -13,7 +13,7 @@
 
 ## Composition (top → bottom)
 
-1. **Brand mark** — 64px SVG lockup + "i-SMARTLUPUS MEDI" in `title-2`. 32px margin below.
+1. **Brand mark** — 64px SVG lockup + "i-SMARTLUPUS" in `title-2`. 32px margin below.
 2. **Greeting** — `display` ("Selamat datang") + `body` muted ("Log masuk dengan No. Kad Pengenalan"). 24px gap.
 3. **Form**
    - IC input — 12-digit numeric, formatted `XXXXXX-XX-XXXX` with auto-hyphen, `inputMode="numeric"`, `autocomplete="username"`, `maxLength=14`.
