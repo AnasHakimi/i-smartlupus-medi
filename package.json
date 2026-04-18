@@ -10,6 +10,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.0",
     "date-fns": "^4.1.0",
