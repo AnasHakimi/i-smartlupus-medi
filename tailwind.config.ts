@@ -10,7 +10,15 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-public-sans)", "system-ui", "sans-serif"],
+        sans: [
+          "var(--font-inter)",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "SF Pro Text",
+          "Segoe UI",
+          "Roboto",
+          "sans-serif",
+        ],
       },
       colors: {
         // Override slate with blue-tinted neutrals for institutional cohesion.
