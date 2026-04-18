@@ -21,9 +21,6 @@ const config: Config = {
         ],
       },
       colors: {
-        // Override slate with blue-tinted neutrals for institutional cohesion.
-        // Every bg-slate-*, text-slate-*, border-slate-* now carries a subtle
-        // blue undertone that ties surfaces to the brand hue.
         slate: {
           50:  "oklch(0.975 0.006 250)",
           100: "oklch(0.950 0.008 250)",
@@ -40,6 +37,46 @@ const config: Config = {
       },
       fontSize: {
         "2xs": ["0.625rem", { lineHeight: "1rem" }],
+        caption: ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.005em" }],
+        footnote: ["0.8125rem", { lineHeight: "1.125rem" }],
+        subhead: ["0.875rem", { lineHeight: "1.25rem", letterSpacing: "0.01em" }],
+        callout: ["0.9375rem", { lineHeight: "1.375rem" }],
+        body: ["1rem", { lineHeight: "1.5rem" }],
+        "title-3": ["1.0625rem", { lineHeight: "1.5rem", letterSpacing: "-0.01em" }],
+        "title-2": ["1.25rem", { lineHeight: "1.75rem", letterSpacing: "-0.015em" }],
+        "title-1": ["1.5rem", { lineHeight: "2rem", letterSpacing: "-0.02em" }],
+        display: ["2rem", { lineHeight: "2.5rem", letterSpacing: "-0.025em" }],
+      },
+      borderRadius: {
+        sm: "6px",
+        md: "8px",
+        lg: "12px",
+        xl: "16px",
+        "2xl": "20px",
+      },
+      boxShadow: {
+        none: "none",
+        sm: "0 1px 2px rgba(15, 23, 42, 0.04)",
+        md: "0 4px 6px rgba(15, 23, 42, 0.05), 0 2px 4px rgba(15, 23, 42, 0.04)",
+        lg: "0 10px 15px rgba(15, 23, 42, 0.08), 0 4px 6px rgba(15, 23, 42, 0.04)",
+        ring: "0 0 0 4px rgba(37, 99, 235, 0.12)",
+        "ring-dark": "0 0 0 4px rgba(96, 165, 250, 0.18)",
+      },
+      transitionTimingFunction: {
+        "ios-out": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "ios-in": "cubic-bezier(0.7, 0, 0.84, 0)",
+        "ios-spring": "cubic-bezier(0.32, 0.72, 0, 1)",
+      },
+      transitionDuration: {
+        fast: "140ms",
+        base: "200ms",
+        slow: "300ms",
+      },
+      minHeight: {
+        touch: "48px",
+      },
+      spacing: {
+        touch: "48px",
       },
     },
   },
