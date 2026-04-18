@@ -92,7 +92,6 @@ export default function ProtectedLayout({
         role={profile.role}
         name={profile.full_name}
         collapsed={collapsed}
-        onToggleCollapsed={toggleCollapsed}
       />
       <main
         className={cn(

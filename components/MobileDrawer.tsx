@@ -7,7 +7,6 @@ import type { UserRole } from "@/lib/supabase/types";
 import { Avatar } from "@/components/ui/avatar";
 import { Chip } from "@/components/ui/chip";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 type AvatarRole = "pemohon" | "penyemak" | "pentadbir";
 
@@ -62,12 +61,7 @@ export function MobileDrawer({ open, onOpenChange, role, name, onLogOut }: Mobil
 
           <div className="flex-1" />
 
-          <div className="flex items-center justify-between border-t border-[var(--border)] pt-4">
-            <span className="text-footnote text-[var(--fg-muted)]">Tema</span>
-            <ThemeToggle />
-          </div>
-
-          <Button variant="secondary" onClick={onLogOut} className="w-full gap-2">
+          <Button variant="secondary" onClick={onLogOut} className="w-full gap-2 border-t-0">
             <LogOut className="h-4 w-4" />
             Log Keluar
           </Button>

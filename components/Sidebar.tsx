@@ -12,8 +12,6 @@ import {
   Users,
   FilePlus,
   LayoutList,
-  ChevronLeft,
-  ChevronRight,
   type LucideIcon,
 } from "lucide-react";
 import { NAV_ITEMS, ROLE_LABELS } from "@/lib/constants";
@@ -54,15 +52,12 @@ interface SidebarProps {
   role: UserRole;
   name: string;
   collapsed: boolean;
-  onToggleCollapsed: () => void;
 }
 
-export default function Sidebar({ role, name, collapsed, onToggleCollapsed }: SidebarProps) {
+export default function Sidebar({ role, name, collapsed }: SidebarProps) {
   const pathname = usePathname();
   const items = NAV_ITEMS[role];
   const roleLabel = ROLE_LABELS[role];
-  const ChevronIcon = collapsed ? ChevronRight : ChevronLeft;
-  const chevronLabel = collapsed ? "Kembangkan bar sisi" : "Runtuhkan bar sisi";
 
   return (
     <aside
@@ -77,7 +72,7 @@ export default function Sidebar({ role, name, collapsed, onToggleCollapsed }: Si
       <div
         className={cn(
           "flex items-center border-b border-[var(--border)]",
-          collapsed ? "justify-center py-4" : "justify-between gap-2 px-5 py-4",
+          collapsed ? "justify-center py-4" : "gap-2 px-5 py-4",
         )}
       >
         <div className={cn("flex items-center gap-2 min-w-0", collapsed && "justify-center")}>
@@ -90,28 +85,7 @@ export default function Sidebar({ role, name, collapsed, onToggleCollapsed }: Si
             </span>
           )}
         </div>
-        {!collapsed && (
-          <button
-            type="button"
-            onClick={onToggleCollapsed}
-            aria-label={chevronLabel}
-            className="inline-flex items-center justify-center w-7 h-7 rounded-md text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] hover:text-[var(--fg)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]"
-          >
-            <ChevronIcon className="h-4 w-4" aria-hidden />
-          </button>
-        )}
       </div>
-
-      {collapsed && (
-        <button
-          type="button"
-          onClick={onToggleCollapsed}
-          aria-label={chevronLabel}
-          className="mx-auto mt-2 inline-flex items-center justify-center w-8 h-8 rounded-md text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] hover:text-[var(--fg)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]"
-        >
-          <ChevronIcon className="h-4 w-4" aria-hidden />
-        </button>
-      )}
 
       {/* Navigation */}
       <nav aria-label="Menu utama" className={cn("flex-1 overflow-y-auto py-3", collapsed ? "px-2" : "px-3")}>

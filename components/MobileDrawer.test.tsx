@@ -34,12 +34,16 @@ describe("MobileDrawer", () => {
     expect(screen.queryByText("Log Keluar")).not.toBeInTheDocument();
   });
 
-  it("renders user info, theme toggle, and log out button when open", () => {
+  it("renders user info and log out button when open", () => {
     renderDrawer({ open: true, role: "admin", name: "Anas Hakimi" });
     expect(screen.getByText("Anas Hakimi")).toBeInTheDocument();
     expect(screen.getByText("Pentadbir")).toBeInTheDocument();
     expect(screen.getByText("Log Keluar")).toBeInTheDocument();
-    expect(screen.getByRole("switch")).toBeInTheDocument();
+  });
+
+  it("does not render a theme toggle (AppHeader owns it)", () => {
+    renderDrawer({ open: true });
+    expect(screen.queryByRole("switch")).not.toBeInTheDocument();
   });
 
   it("fires onLogOut when log out button clicked", () => {

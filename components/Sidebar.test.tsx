@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Sidebar from "./Sidebar";
 
 vi.mock("next/navigation", () => ({
@@ -8,14 +8,7 @@ vi.mock("next/navigation", () => ({
 
 describe("Sidebar", () => {
   it("renders nav items for the role", () => {
-    render(
-      <Sidebar
-        role="admin"
-        name="Anas Hakimi"
-        collapsed={false}
-        onToggleCollapsed={() => {}}
-      />
-    );
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} />);
     expect(screen.getByText("Utama")).toBeInTheDocument();
     expect(screen.getByText("Pengguna")).toBeInTheDocument();
     expect(screen.getByText("Semua")).toBeInTheDocument();
@@ -23,53 +16,24 @@ describe("Sidebar", () => {
   });
 
   it("shows user footer when expanded", () => {
-    render(
-      <Sidebar
-        role="admin"
-        name="Anas Hakimi"
-        collapsed={false}
-        onToggleCollapsed={() => {}}
-      />
-    );
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} />);
     expect(screen.getByText("Anas Hakimi")).toBeInTheDocument();
   });
 
   it("hides labels and footer when collapsed", () => {
-    render(
-      <Sidebar
-        role="admin"
-        name="Anas Hakimi"
-        collapsed={true}
-        onToggleCollapsed={() => {}}
-      />
-    );
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={true} />);
     expect(screen.queryByText("Utama")).not.toBeInTheDocument();
     expect(screen.queryByText("Anas Hakimi")).not.toBeInTheDocument();
   });
 
-  it("fires onToggleCollapsed when chevron clicked", () => {
-    const onToggleCollapsed = vi.fn();
-    render(
-      <Sidebar
-        role="admin"
-        name="Anas Hakimi"
-        collapsed={false}
-        onToggleCollapsed={onToggleCollapsed}
-      />
-    );
-    fireEvent.click(screen.getByLabelText("Runtuhkan bar sisi"));
-    expect(onToggleCollapsed).toHaveBeenCalledOnce();
+  it("does not render a collapse toggle button (AppHeader owns it)", () => {
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} />);
+    expect(screen.queryByLabelText("Runtuhkan bar sisi")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Kembangkan bar sisi")).not.toBeInTheDocument();
   });
 
   it("marks the active route with aria-current", () => {
-    render(
-      <Sidebar
-        role="admin"
-        name="Anas Hakimi"
-        collapsed={false}
-        onToggleCollapsed={() => {}}
-      />
-    );
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} />);
     const utamaLink = screen.getByText("Utama").closest("a");
     expect(utamaLink).toHaveAttribute("aria-current", "page");
   });
