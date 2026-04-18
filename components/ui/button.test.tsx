@@ -11,8 +11,13 @@ describe("Button", () => {
     expect(onClick).toHaveBeenCalledOnce();
   });
 
-  it("applies 48px min-height for touch", () => {
+  it("default md size is 44px (h-11, Apple HIG touch target)", () => {
     render(<Button>OK</Button>);
+    expect(screen.getByRole("button")).toHaveClass("h-11");
+  });
+
+  it("lg size uses 48px min-height for hero CTAs", () => {
+    render(<Button size="lg">Hantar</Button>);
     expect(screen.getByRole("button")).toHaveClass("min-h-touch");
   });
 

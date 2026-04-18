@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "secondary" | "destructive" | "ghost";
-type Size = "md" | "sm";
+type Size = "lg" | "md" | "sm";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
@@ -22,8 +22,9 @@ const base =
   "disabled:opacity-40 disabled:pointer-events-none";
 
 const sizes: Record<Size, string> = {
-  md: "min-h-touch px-4 text-callout",
-  sm: "h-10 px-3 text-subhead",
+  lg: "min-h-touch px-5 text-body",   // 48px — hero CTA (login submit, form primary)
+  md: "h-11 px-4 text-subhead",       // 44px — default inline button (Apple HIG)
+  sm: "h-9 px-3 text-footnote",       // 36px — dense inline action
 };
 
 const variants: Record<Variant, string> = {

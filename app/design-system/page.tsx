@@ -25,13 +25,37 @@ export default function DesignSystemPage() {
 
       <section className="space-y-4">
         <h2 className="text-title-2 font-semibold">Buttons</h2>
-        <div className="flex flex-wrap gap-3">
-          <Button>Primary</Button>
-          <Button variant="secondary">Secondary</Button>
-          <Button variant="destructive"><Trash2 className="h-4 w-4" />Padam</Button>
-          <Button variant="ghost">Ghost</Button>
-          <Button disabled>Disabled</Button>
-          <Button loading>Loading</Button>
+        <div className="space-y-3">
+          <div>
+            <p className="text-footnote text-[var(--fg-muted)] mb-2">
+              <code>size=&quot;lg&quot;</code> · 48px · hero CTA (login submit, form bottom bar)
+            </p>
+            <Button size="lg">Hantar Permohonan</Button>
+          </div>
+          <div>
+            <p className="text-footnote text-[var(--fg-muted)] mb-2">
+              <code>size=&quot;md&quot;</code> (default) · 44px · inline button (Apple HIG standard)
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Button>Primary</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="destructive"><Trash2 className="h-4 w-4" />Padam</Button>
+              <Button variant="ghost">Ghost</Button>
+              <Button disabled>Disabled</Button>
+              <Button loading>Loading</Button>
+            </div>
+          </div>
+          <div>
+            <p className="text-footnote text-[var(--fg-muted)] mb-2">
+              <code>size=&quot;sm&quot;</code> · 36px · dense inline action (table rows, card toolbars)
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm">Simpan</Button>
+              <Button size="sm" variant="secondary">Edit</Button>
+              <Button size="sm" variant="destructive">Padam</Button>
+              <Button size="sm" variant="ghost">Batal</Button>
+            </div>
+          </div>
         </div>
       </section>
 
