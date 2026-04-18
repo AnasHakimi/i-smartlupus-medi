@@ -45,19 +45,56 @@ export function TicketCardSkeleton() {
   );
 }
 
+/** Skeleton for a single bento-shape stat card */
+function BentoStatSkeleton() {
+  return (
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+      <div className="space-y-3">
+        <SkeletonPulse className="h-3 w-20" />
+        <SkeletonPulse className="h-7 w-14" />
+      </div>
+    </div>
+  );
+}
+
+/** Skeleton for the chart bento tile */
+function BentoChartSkeleton() {
+  return (
+    <div className="col-span-2 md:col-span-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+      <div className="space-y-3">
+        <SkeletonPulse className="h-4 w-32" />
+        <SkeletonPulse className="h-3 w-48" />
+        <SkeletonPulse className="h-[180px] w-full" />
+      </div>
+    </div>
+  );
+}
+
 /** Skeleton for the dashboard page */
 export function DashboardSkeleton() {
   return (
-    <div>
-      <div className="mb-8 space-y-2">
-        <SkeletonPulse className="h-7 w-56" />
+    <div className="space-y-6">
+      {/* Greeting strip */}
+      <div className="space-y-2">
+        <SkeletonPulse className="h-8 w-64" />
         <SkeletonPulse className="h-4 w-40" />
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCardSkeleton />
-        <StatCardSkeleton />
-        <StatCardSkeleton />
-        <StatCardSkeleton />
+
+      {/* Bento grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <BentoStatSkeleton />
+        <BentoStatSkeleton />
+        <BentoStatSkeleton />
+        <BentoStatSkeleton />
+        <BentoChartSkeleton />
+      </div>
+
+      {/* Recent tickets */}
+      <div className="space-y-3">
+        <SkeletonPulse className="h-4 w-32" />
+        <TicketCardSkeleton />
+        <TicketCardSkeleton />
+        <TicketCardSkeleton />
       </div>
     </div>
   );
