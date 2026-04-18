@@ -17,25 +17,21 @@
     --primary-tint: rgba(37, 99, 235, 0.08);
     --on-primary: #FFFFFF;
 
-    --accent: #059669;
-    --on-accent: #FFFFFF;
-
     --destructive: #DC2626;
     --destructive-tint: rgba(220, 38, 38, 0.08);
     --on-destructive: #FFFFFF;
 
-    --warning: #D97706;
-
-    --chip-pending-bg: #FEF3C7;
-    --chip-pending-fg: #92400E;
-    --chip-reviewing-bg: #DBEAFE;
-    --chip-reviewing-fg: #1E40AF;
-    --chip-executing-bg: #E0E7FF;
-    --chip-executing-fg: #3730A3;
-    --chip-done-bg: #D1FAE5;
-    --chip-done-fg: #065F46;
-    --chip-rejected-bg: #FEE2E2;
-    --chip-rejected-fg: #991B1B;
+    /* Workflow chips — mostly blue-tonal, ends punctuated by green/red */
+    --chip-pending-bg: oklch(0.950 0.008 250);   /* slate-100 — waiting, no energy yet */
+    --chip-pending-fg: oklch(0.440 0.010 250);   /* slate-600 */
+    --chip-reviewing-bg: #DBEAFE;                /* blue-100 — attention ON */
+    --chip-reviewing-fg: #1E40AF;                /* blue-800 */
+    --chip-executing-bg: #BFDBFE;                /* blue-200 — deeper active */
+    --chip-executing-fg: #1E3A8A;                /* blue-900 */
+    --chip-done-bg: #D1FAE5;                     /* emerald-100 — crisp completion */
+    --chip-done-fg: #047857;                     /* emerald-700 */
+    --chip-rejected-bg: #FEE2E2;                 /* red-100 — sharp stop */
+    --chip-rejected-fg: #B91C1C;                 /* red-700 */
 
     --ring: rgba(37, 99, 235, 0.5);
   }
@@ -53,25 +49,21 @@
     --primary-tint: rgba(96, 165, 250, 0.12);
     --on-primary: #0F172A;
 
-    --accent: #34D399;
-    --on-accent: #0F172A;
-
     --destructive: #F87171;
     --destructive-tint: rgba(248, 113, 113, 0.12);
     --on-destructive: #0F172A;
 
-    --warning: #FBBF24;
-
-    --chip-pending-bg: rgba(217, 119, 6, 0.15);
-    --chip-pending-fg: #FBBF24;
-    --chip-reviewing-bg: rgba(37, 99, 235, 0.18);
-    --chip-reviewing-fg: #93C5FD;
-    --chip-executing-bg: rgba(79, 70, 229, 0.20);
-    --chip-executing-fg: #A5B4FC;
-    --chip-done-bg: rgba(5, 150, 105, 0.18);
-    --chip-done-fg: #6EE7B7;
-    --chip-rejected-bg: rgba(220, 38, 38, 0.18);
-    --chip-rejected-fg: #FCA5A5;
+    /* Dark: same philosophy — tonal blue workflow, green/red punctuation only */
+    --chip-pending-bg: rgba(148, 163, 184, 0.15);  /* slate-400 @ 15% */
+    --chip-pending-fg: #94A3B8;                    /* slate-400 */
+    --chip-reviewing-bg: rgba(59, 130, 246, 0.18); /* blue-500 @ 18% */
+    --chip-reviewing-fg: #93C5FD;                  /* blue-300 */
+    --chip-executing-bg: rgba(37, 99, 235, 0.25);  /* blue-600 @ 25% */
+    --chip-executing-fg: #BFDBFE;                  /* blue-200 */
+    --chip-done-bg: rgba(16, 185, 129, 0.18);      /* emerald-500 @ 18% */
+    --chip-done-fg: #6EE7B7;                       /* emerald-300 */
+    --chip-rejected-bg: rgba(239, 68, 68, 0.18);   /* red-500 @ 18% */
+    --chip-rejected-fg: #FCA5A5;                   /* red-300 */
 
     --ring: rgba(96, 165, 250, 0.6);
   }

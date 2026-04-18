@@ -34,10 +34,7 @@
 | Primary | `#2563EB` | `blue-600` | Primary buttons, active nav, focus ring |
 | Primary hover | `#1D4ED8` | `blue-700` | Hover state only |
 | On Primary | `#FFFFFF` | `white` | Text on primary |
-| Accent | `#059669` | `emerald-600` | Approve / success / "Lulus" |
-| On Accent | `#FFFFFF` | `white` | Text on accent |
 | Destructive | `#DC2626` | `red-600` | Delete, reject, "Tolak" |
-| Warning | `#D97706` | `amber-600` | Pending review stamps |
 | Background | `#F8FAFC` | `slate-50` | Page background |
 | Surface | `#FFFFFF` | `white` | Cards, sheets, modals |
 | Foreground | `#0F172A` | `slate-900` | Primary text |
@@ -52,7 +49,6 @@
 |------|-----|----------|-------|
 | Primary | `#60A5FA` | `blue-400` | Elevated, not blue-600 (too low contrast on dark) |
 | On Primary | `#0F172A` | `slate-900` | Dark text on light primary |
-| Accent | `#34D399` | `emerald-400` | Elevated green |
 | Destructive | `#F87171` | `red-400` | Elevated red |
 | Background | `#020617` | `slate-950` | Page background |
 | Surface | `#0F172A` | `slate-900` | Cards, sheets |
@@ -304,6 +300,8 @@ Mobile: slide up from bottom, `rounded-t-2xl rounded-b-none`, full width, swipe-
 
 ### State chips (Permohonan / Semakan / Pelaksanaan / Selesai / Tolak)
 
+**Palette philosophy:** Blue-tonal workflow (slate → blue → deeper blue as stage advances). Only Done and Rejected break the monochrome with green/red punctuation. This keeps the UI energetic-not-colorful — one dominant hue doing heavy lifting, plus sharp semantic accents.
+
 ```css
 .chip {
   display: inline-flex;
@@ -316,11 +314,11 @@ Mobile: slide up from bottom, `rounded-t-2xl rounded-b-none`, full width, swipe-
   font-weight: 600;
   letter-spacing: 0.01em;
 }
-.chip-pending    { background: #FEF3C7; color: #92400E; }  /* amber tint */
-.chip-reviewing  { background: #DBEAFE; color: #1E40AF; }  /* blue tint */
-.chip-executing  { background: #E0E7FF; color: #3730A3; }  /* indigo tint */
-.chip-done       { background: #D1FAE5; color: #065F46; }  /* emerald tint */
-.chip-rejected   { background: #FEE2E2; color: #991B1B; }  /* red tint */
+.chip-pending    { background: slate-100;  color: slate-600; }  /* waiting, no energy yet */
+.chip-reviewing  { background: blue-100;   color: blue-800;  }  /* attention ON */
+.chip-executing  { background: blue-200;   color: blue-900;  }  /* deeper active */
+.chip-done       { background: emerald-100; color: emerald-700; } /* crisp completion */
+.chip-rejected   { background: red-100;    color: red-700;   }  /* sharp stop */
 ```
 
 ### Bottom nav (PWA)
