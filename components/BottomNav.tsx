@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import type { UserRole } from "@/lib/supabase/types";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { cn } from "@/lib/utils";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Home,
@@ -39,7 +39,10 @@ export default function BottomNav({ role }: BottomNavProps) {
   const items = NAV_ITEMS[role];
 
   return (
-    <nav aria-label="Menu utama" className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t bg-white md:hidden">
+    <nav
+      aria-label="Menu utama"
+      className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t border-[var(--border)] bg-[var(--surface)] md:hidden"
+    >
       <div className="flex h-full items-center justify-around">
         {items.map((item) => {
           const Icon = ICON_MAP[item.icon] ?? Home;
@@ -51,20 +54,20 @@ export default function BottomNav({ role }: BottomNavProps) {
               href={item.href}
               aria-label={item.label}
               aria-current={isActive ? "page" : undefined}
-              className={`flex flex-col items-center justify-center gap-1.5 px-3 min-h-[56px] ${
-                isActive ? "text-blue-600 bg-blue-50/50" : "text-slate-500"
-              } transition-colors rounded-lg`}
+              className={cn(
+                "flex flex-col items-center justify-center gap-1 px-3 min-h-[56px] rounded-lg transition-colors",
+                isActive
+                  ? "text-[var(--primary)] bg-[var(--primary-tint)]"
+                  : "text-[var(--fg-muted)]",
+              )}
             >
-              <Icon className={isActive ? "h-6 w-6 stroke-[2.5]" : "h-6 w-6 stroke-[2]"} />
-              <span className={`text-[11px] font-bold tracking-tight ${isActive ? "opacity-100" : "opacity-80"}`}>
+              <Icon className={isActive ? "h-6 w-6 stroke-[2.5]" : "h-6 w-6 stroke-[2]"} aria-hidden />
+              <span className={cn("text-[11px] font-semibold tracking-tight", !isActive && "opacity-80")}>
                 {item.label}
               </span>
             </Link>
           );
         })}
-        <div className="pl-1 ml-1 border-l border-slate-200 h-8 flex items-center">
-          <ThemeToggle />
-        </div>
       </div>
     </nav>
   );
