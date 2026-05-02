@@ -1,14 +1,9 @@
-import type { UserRole, AssetCondition, TicketStatus, DisposalMethod } from "./supabase/types";
+import type { UserRole, AssetCondition, TicketStatus, DisposalMethod, AssetCategory, AssetSubCategory } from "./supabase/types";
 
 export const STATUS_CONFIG: Record<
   TicketStatus,
   { label: string; color: string; bg: string }
 > = {
-  BARU: {
-    label: "BARU",
-    color: "text-blue-700",
-    bg: "bg-blue-100",
-  },
   menunggu_semakan: {
     label: "Menunggu Semakan",
     color: "text-yellow-700",
@@ -43,6 +38,16 @@ export const ASSET_CONDITIONS: Record<AssetCondition, string> = {
   usang: "Usang",
 };
 
+export const ASSET_CATEGORIES: Record<AssetCategory, string> = {
+  harta_modal: "Harta Modal",
+  aset_bernilai_rendah: "Aset Bernilai Rendah",
+};
+
+export const ASSET_SUB_CATEGORIES: Record<AssetSubCategory, string> = {
+  alat_perubatan: "Alat Perubatan",
+  bukan_alat_perubatan: "Bukan Alat Perubatan",
+};
+
 export const ROLE_LABELS: Record<UserRole, string> = {
   user: "Pengguna",
   unit_aset: "Unit Aset",
@@ -55,21 +60,24 @@ export const NAV_ITEMS: Record<
 > = {
   user: [
     { href: "/dashboard", label: "Utama", icon: "Home" },
-    { href: "/mohon", label: "Mohon", icon: "FilePlus" },
     { href: "/status", label: "Status", icon: "ClipboardList" },
+    { href: "/mohon", label: "Mohon", icon: "Plus" },
+    { href: "/semua", label: "Semua", icon: "LayoutList" },
     { href: "/profil", label: "Profil", icon: "User" },
   ],
   unit_aset: [
     { href: "/dashboard", label: "Utama", icon: "Home" },
-    { href: "/semakan", label: "Semakan", icon: "ClipboardCheck" },
     { href: "/semua", label: "Semua", icon: "LayoutList" },
+    { href: "/semakan", label: "Semakan", icon: "ClipboardCheck" },
+    { href: "/status", label: "Status", icon: "ClipboardList" },
     { href: "/profil", label: "Profil", icon: "User" },
   ],
   admin: [
     { href: "/dashboard", label: "Utama", icon: "Home" },
-    { href: "/pengguna", label: "Pengguna", icon: "Users" },
     { href: "/semua", label: "Semua", icon: "LayoutList" },
+    { href: "/pengguna", label: "Pengguna", icon: "Users" },
     { href: "/profil", label: "Profil", icon: "User" },
+    { href: "/status", label: "Status", icon: "ClipboardList" },
   ],
 };
 

@@ -12,10 +12,12 @@ import {
   Users,
   FilePlus,
   LayoutList,
+  LogOut,
   type LucideIcon,
 } from "lucide-react";
 import { NAV_ITEMS, ROLE_LABELS } from "@/lib/constants";
 import type { UserRole } from "@/lib/supabase/types";
+import { cn } from "@/lib/utils";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Home,
@@ -32,50 +34,92 @@ const ICON_MAP: Record<string, LucideIcon> = {
 interface SidebarProps {
   role: UserRole;
   name: string;
+  collapsed: boolean;
+  onLogOut: () => void;
 }
 
-export default function Sidebar({ role, name }: SidebarProps) {
+export default function Sidebar({ role, name, collapsed, onLogOut }: SidebarProps) {
   const pathname = usePathname();
   const items = NAV_ITEMS[role];
   const roleLabel = ROLE_LABELS[role];
 
   return (
-    <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-40 border-r bg-white">
+    <aside
+      className={cn(
+        "hidden md:flex md:flex-col md:fixed md:inset-y-0 z-40",
+        "bg-[var(--surface)] border-r border-[var(--border)] text-[var(--fg)]",
+        "transition-[width] duration-base ease-ios-out",
+        collapsed ? "md:w-16" : "md:w-60",
+      )}
+    >
       {/* Header */}
-      <div className="flex flex-col px-6 py-5 border-b">
-        <span className="text-lg font-black text-blue-600">i-SMARTLUPUS</span>
-        <span className="text-xs text-slate-500 mt-0.5">{roleLabel}</span>
+      <div
+        className={cn(
+          "flex items-center border-b border-[var(--border)]",
+          collapsed ? "justify-center py-4" : "gap-2 px-5 py-4",
+        )}
+      >
+        <div className={cn("flex items-center gap-2 min-w-0", collapsed && "justify-center")}>
+          <div className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-[var(--primary)] text-[var(--on-primary)] font-black text-xs flex-shrink-0">
+            iS
+          </div>
+          {!collapsed && (
+            <span className="text-subhead font-semibold text-[var(--primary)] tracking-tight truncate">
+              i-SMARTLUPUS
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Navigation */}
-      <nav aria-label="Menu utama" className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        {items.map((item) => {
-          const Icon = ICON_MAP[item.icon] ?? Home;
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActive ? "page" : undefined}
-              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                isActive
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-slate-600 hover:bg-slate-50"
-              }`}
-            >
-              <Icon className="h-5 w-5 shrink-0" />
-              {item.label}
-            </Link>
-          );
-        })}
+      <nav aria-label="Menu utama" className={cn("flex-1 overflow-y-auto py-3", collapsed ? "px-2" : "px-3")}>
+        <ul className="space-y-1">
+          {items.map((item) => {
+            const Icon = ICON_MAP[item.icon] ?? Home;
+            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  title={collapsed ? item.label : undefined}
+                  className={cn(
+                    "flex items-center rounded-md text-subhead font-medium transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]",
+                    collapsed
+                      ? "justify-center w-11 h-11 mx-auto"
+                      : "gap-3 px-3 py-2.5",
+                    isActive
+                      ? "bg-[var(--primary-tint)] text-[var(--primary)]"
+                      : "text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] hover:text-[var(--fg)]",
+                  )}
+                >
+                  <Icon className="h-5 w-5 shrink-0" aria-hidden />
+                  {!collapsed && <span className="truncate">{item.label}</span>}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </nav>
 
-      {/* Footer */}
-      <div className="border-t px-6 py-4">
-        <p className="text-sm font-semibold text-slate-800 truncate">{name}</p>
-        <p className="text-xs text-slate-500 mt-0.5">{roleLabel}</p>
-      </div>
+      {/* Footer (User Details + Logout) */}
+      {!collapsed && (
+        <div className="mt-auto border-t border-[var(--border)] p-4 space-y-3">
+          <div className="min-w-0">
+            <p className="text-subhead font-bold text-[var(--fg)] truncate">{name}</p>
+            <p className="text-caption font-medium text-[var(--fg-muted)]">{roleLabel}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onLogOut}
+            className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-md text-subhead font-semibold text-[var(--destructive)] hover:bg-[var(--destructive-tint)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--destructive)]"
+          >
+            <LogOut className="h-4 w-4 shrink-0" />
+            <span>Log Keluar</span>
+          </button>
+        </div>
+      )}
     </aside>
   );
 }

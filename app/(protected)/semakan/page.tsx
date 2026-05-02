@@ -1,19 +1,52 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Check, X, ClipboardCheck } from "lucide-react";
+import { Check, X, ClipboardCheck, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import type { DisposalTicket } from "@/lib/supabase/types";
 import { ASSET_CONDITIONS } from "@/lib/constants";
-import { formatDate } from "@/lib/utils";
-import StatusBadge from "@/components/StatusBadge";
+import { cn, formatDate } from "@/lib/utils";
+import { StatusChip } from "@/components/StatusChip";
+import { Button } from "@/components/ui/button";
+import SkeletonPulse from "@/components/Skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+
+function PageSkeleton() {
+  return (
+    <div className="space-y-6 animate-in">
+      <div className="space-y-2">
+        <SkeletonPulse className="h-8 w-48" />
+        <SkeletonPulse className="h-4 w-32" />
+      </div>
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 space-y-4">
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <SkeletonPulse className="h-4 w-20" />
+                <SkeletonPulse className="h-5 w-24" />
+              </div>
+              <SkeletonPulse className="h-6 w-64" />
+              <SkeletonPulse className="h-4 w-40" />
+            </div>
+            <div className="flex gap-2 pt-2">
+              <SkeletonPulse className="h-9 flex-1 rounded-md" />
+              <SkeletonPulse className="h-9 flex-1 rounded-md" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function SemakanPage() {
   const [tickets, setTickets] = useState<DisposalTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [rejectId, setRejectId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
+  const [isActionLoading, setIsActionLoading] = useState<string | null>(null);
 
   const loadTickets = useCallback(async () => {
     setLoading(true);
@@ -32,40 +65,24 @@ export default function SemakanPage() {
   }, [loadTickets]);
 
   async function handleLulus(ticket: DisposalTicket) {
+    setIsActionLoading(ticket.id);
     const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) return;
-
-    const now = new Date().toISOString();
-
-    const { error: updateError } = await supabase
-      .from("disposal_tickets")
-      .update({
-        status: "proses_pelupusan",
-        reviewed_by: user.id,
-        reviewed_at: now,
-      })
-      .eq("id", ticket.id);
+    const { error: updateError } = await supabase.rpc(
+      "approve_disposal_ticket",
+      {
+        p_ticket_id: ticket.id,
+      },
+    );
 
     if (updateError) {
       toast.error("Gagal meluluskan permohonan.");
+      setIsActionLoading(null);
       return;
     }
 
-    await supabase.from("audit_logs").insert({
-      ticket_id: ticket.id,
-      performed_by: user.id,
-      action: "semakan_lulus",
-      old_value: "menunggu_semakan",
-      new_value: "proses_pelupusan",
-      notes: null,
-    });
-
     toast.success(`${ticket.ticket_no} telah diluluskan.`);
     await loadTickets();
+    setIsActionLoading(null);
   }
 
   async function handleTolak(ticketId: string) {
@@ -74,152 +91,149 @@ export default function SemakanPage() {
       return;
     }
 
+    setIsActionLoading(ticketId);
     const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) return;
-
-    const now = new Date().toISOString();
-
-    const { error: updateError } = await supabase
-      .from("disposal_tickets")
-      .update({
-        status: "ditolak",
-        rejection_reason: rejectReason.trim(),
-        reviewed_by: user.id,
-        reviewed_at: now,
-      })
-      .eq("id", ticketId);
+    const { error: updateError } = await supabase.rpc(
+      "reject_disposal_ticket",
+      {
+        p_ticket_id: ticketId,
+        p_rejection_reason: rejectReason.trim(),
+      },
+    );
 
     if (updateError) {
       toast.error("Gagal menolak permohonan.");
+      setIsActionLoading(null);
       return;
     }
-
-    await supabase.from("audit_logs").insert({
-      ticket_id: ticketId,
-      performed_by: user.id,
-      action: "semakan_ditolak",
-      old_value: "menunggu_semakan",
-      new_value: "ditolak",
-      notes: rejectReason.trim(),
-    });
 
     toast.success("Permohonan telah ditolak.");
     setRejectId(null);
     setRejectReason("");
     await loadTickets();
+    setIsActionLoading(null);
   }
 
+  if (loading) return <PageSkeleton />;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-black text-slate-900">
+      <header>
+        <h1 className="text-title-1 font-semibold text-[var(--fg)] tracking-tight">
           Semakan Permohonan
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          {loading
-            ? "Memuatkan..."
-            : `${tickets.length} permohonan menunggu semakan`}
+        <p className="text-footnote text-[var(--fg-muted)] mt-1">
+          {tickets.length} permohonan menunggu tindakan anda
         </p>
-      </div>
+      </header>
 
       {/* Content */}
-      {loading ? (
-        <div className="flex justify-center py-20" role="status">
-          <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-          <span className="sr-only">Memuatkan...</span>
-        </div>
-      ) : tickets.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <ClipboardCheck size={48} className="text-slate-200 mb-4" />
-          <p className="text-sm font-semibold text-slate-400">
-            Tiada permohonan menunggu.
-          </p>
+      {tickets.length === 0 ? (
+        <div className="py-20 px-6 bg-[var(--surface)] border border-[var(--border)] rounded-xl">
+          <EmptyState
+            icon={<ClipboardCheck className="h-10 w-10 text-[var(--primary)] opacity-20" aria-hidden />}
+            title="Tiada permohonan menunggu"
+            description="Semua permohonan telah disemak. Kerja yang bagus!"
+          />
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {tickets.map((ticket) => (
             <div
               key={ticket.id}
-              className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm space-y-3"
+              className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-5 shadow-none space-y-4 transition-all"
             >
               {/* Top row: ticket number + status badge */}
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">
+                <span className="tabular-nums text-caption font-bold text-[var(--primary)] uppercase tracking-wider">
                   {ticket.ticket_no}
                 </span>
-                <StatusBadge status={ticket.status} />
+                <StatusChip status={ticket.status} />
               </div>
 
-              {/* Asset name */}
-              <p className="text-sm font-bold text-slate-900">
-                {ticket.asset_name}
-              </p>
-
-              {/* Meta: condition / location / date */}
-              <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-slate-400">
-                <span>{ASSET_CONDITIONS[ticket.asset_condition]}</span>
-                <span>·</span>
-                <span>{ticket.location}</span>
-                <span>·</span>
-                <span>{formatDate(ticket.created_at)}</span>
+              {/* Asset Info */}
+              <div className="space-y-1">
+                <p className="text-title-3 font-semibold text-[var(--fg)]">
+                  {ticket.asset_name}
+                </p>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-footnote text-[var(--fg-muted)]">
+                  <span className="flex items-center gap-1">
+                    <AlertCircle size={12} className="text-[var(--primary)]" />
+                    {ASSET_CONDITIONS[ticket.asset_condition]}
+                  </span>
+                  <span aria-hidden className="text-[var(--border-strong)]">·</span>
+                  <span>{ticket.location}</span>
+                  <span aria-hidden className="text-[var(--border-strong)]">·</span>
+                  <span className="tabular-nums">{formatDate(ticket.created_at)}</span>
+                </div>
               </div>
 
-              {/* Rejection textarea (shown when this ticket is being rejected) */}
-              {rejectId === ticket.id && (
-                <div className="space-y-2 pt-1">
-                  <textarea
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-red-300 resize-none"
-                    rows={3}
-                    placeholder="Sebab penolakan..."
-                    value={rejectReason}
-                    onChange={(e) => setRejectReason(e.target.value)}
-                  />
+              {/* Rejection form (shown when this ticket is being rejected) */}
+              {rejectId === ticket.id ? (
+                <div className="space-y-3 pt-2 border-t border-[var(--border)] animate-in">
+                  <div className="space-y-1.5">
+                    <label htmlFor={`reject-${ticket.id}`} className="text-subhead font-medium text-[var(--fg)]">
+                      Sebab Penolakan
+                    </label>
+                    <textarea
+                      id={`reject-${ticket.id}`}
+                      className={cn(
+                        "w-full rounded-md border border-[var(--border)] bg-[var(--bg)] p-3 text-body text-[var(--fg)]",
+                        "placeholder:text-[var(--fg-muted)] focus:outline-none focus:border-[var(--destructive)] focus:shadow-ring resize-none transition-all"
+                      )}
+                      rows={3}
+                      autoFocus
+                      placeholder="Nyatakan sebab mengapa permohonan ini ditolak..."
+                      value={rejectReason}
+                      onChange={(e) => setRejectReason(e.target.value)}
+                    />
+                  </div>
                   <div className="flex gap-2">
-                    <button
+                    <Button
+                      variant="ghost"
+                      className="flex-1"
                       onClick={() => {
                         setRejectId(null);
                         setRejectReason("");
                       }}
-                      className="flex-1 rounded-xl border border-slate-200 bg-white py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                     >
                       Batal
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      className="flex-1 gap-2"
+                      loading={isActionLoading === ticket.id}
                       onClick={() => handleTolak(ticket.id)}
-                      className="flex-1 rounded-xl bg-red-50 py-3 text-sm font-semibold text-red-600 hover:bg-red-100 transition-colors flex items-center justify-center gap-1"
                     >
-                      <X size={13} />
+                      <X size={14} />
                       Tolak
-                    </button>
+                    </Button>
                   </div>
                 </div>
-              )}
-
-              {/* Action buttons (hidden while rejection form is open for this ticket) */}
-              {rejectId !== ticket.id && (
-                <div className="flex gap-2 pt-1">
-                  <button
+              ) : (
+                /* Action buttons */
+                <div className="flex gap-2 pt-2 border-t border-[var(--border)]">
+                  <Button
+                    variant="primary"
+                    className="flex-1 gap-2"
+                    loading={isActionLoading === ticket.id}
                     onClick={() => handleLulus(ticket)}
-                    className="flex-1 rounded-xl bg-green-600 py-3 text-sm font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
                   >
-                    <Check size={13} />
+                    <Check size={14} />
                     Lulus
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="flex-1 gap-2 text-[var(--destructive)] bg-[var(--destructive-tint)] hover:bg-[var(--destructive)] hover:text-white"
                     onClick={() => {
                       setRejectId(ticket.id);
                       setRejectReason("");
                     }}
-                    className="flex-1 rounded-xl bg-red-50 py-3 text-sm font-semibold text-red-600 hover:bg-red-100 transition-colors flex items-center justify-center gap-1"
                   >
-                    <X size={13} />
+                    <X size={14} />
                     Tolak
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>

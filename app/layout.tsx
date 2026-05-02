@@ -1,23 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Public_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
-const publicSans = Public_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
-  variable: "--font-public-sans",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "i-SMARTLUPUS MEDI",
+  title: "i-SMARTLUPUS",
   description: "Sistem Pengurusan Pelupusan Aset Perubatan",
   manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2563eb",
+  themeColor: "#059669",
   width: "device-width",
   initialScale: 1,
 };
@@ -28,10 +29,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ms" className={publicSans.variable}>
-      <body className="bg-slate-50 text-slate-900 antialiased font-sans">
-        {children}
-        <Toaster position="top-center" richColors />
+    <html lang="ms" className={inter.variable}>
+      <body className="antialiased font-sans" style={{ background: "var(--bg)", color: "var(--fg)" }}>
+        <ThemeProvider>
+          {children}
+          <Toaster position="top-center" richColors />
+        </ThemeProvider>
       </body>
     </html>
   );

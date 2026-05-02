@@ -4,13 +4,82 @@
 
 @layer base {
   :root {
-    /* Blue-tinted surfaces instead of pure gray */
-    --background: oklch(0.975 0.005 250);
-    --foreground: oklch(0.15 0.008 250);
-    --surface: oklch(1.00 0.003 250);
-    --surface-raised: oklch(1.00 0.003 250);
-    --border: oklch(0.90 0.01 250);
-    --text-muted: oklch(0.55 0.01 250);
+    /* Light theme — clean slate neutrals + emerald primary */
+    --bg: oklch(0.975 0.006 160);            /* near-white with hint of green */
+    --surface: oklch(1.000 0.003 160);       /* crisp white cards */
+    --surface-elevated: oklch(0.985 0.008 160);
+    --surface-tinted: oklch(0.955 0.025 160);/* branded tint for hero / feature cards */
+    --fg: oklch(0.200 0.008 160);
+    --fg-muted: oklch(0.530 0.010 160);
+    --border: oklch(0.900 0.012 160);
+    --border-strong: oklch(0.830 0.020 160);
+
+    --primary: #059669;                      /* emerald-600 */
+    --primary-hover: #047857;                /* emerald-700 */
+    --primary-tint: rgba(5, 150, 105, 0.08);
+    --on-primary: #FFFFFF;
+
+    --destructive: #DC2626;
+    --destructive-tint: rgba(220, 38, 38, 0.08);
+    --on-destructive: #FFFFFF;
+
+    /* Workflow chips — emerald progression (pale → deep) tells the story */
+    --chip-pending-bg: oklch(0.950 0.008 160);   /* slate-100 — waiting, no progress */
+    --chip-pending-fg: oklch(0.440 0.010 160);   /* slate-600 */
+    --chip-reviewing-bg: #ECFDF5;                /* emerald-50 — first touch */
+    --chip-reviewing-fg: #065F46;                /* emerald-800 */
+    --chip-executing-bg: #D1FAE5;                /* emerald-100 — active */
+    --chip-executing-fg: #064E3B;                /* emerald-900 */
+    --chip-done-bg: #A7F3D0;                     /* emerald-200 — deepest, completed */
+    --chip-done-fg: #064E3B;                     /* emerald-900 */
+    --chip-rejected-bg: #FEE2E2;                 /* red-100 — sharp stop */
+    --chip-rejected-fg: #B91C1C;                 /* red-700 */
+
+    --ring: rgba(5, 150, 105, 0.5);
+
+    /* Tactile shadows & glows */
+    --shadow-tactile: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 3px 1px rgba(0, 0, 0, 0.03);
+    --shadow-inner-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+    --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark {
+    --bg: oklch(0.130 0.008 160);
+    --surface: oklch(0.200 0.010 160);
+    --surface-elevated: oklch(0.265 0.012 160);
+    --surface-tinted: oklch(0.235 0.025 160); /* branded emerald-tinted surface */
+    --fg: oklch(0.950 0.008 160);
+    --fg-muted: oklch(0.640 0.010 160);
+    --border: oklch(0.290 0.012 160);
+    --border-strong: oklch(0.360 0.020 160);
+
+    --primary: #34D399;                      /* emerald-400 */
+    --primary-hover: #10B981;                /* emerald-500 */
+    --primary-tint: rgba(52, 211, 153, 0.12);
+    --on-primary: #022C22;                   /* emerald-950 dark text */
+
+    --destructive: #F87171;
+    --destructive-tint: rgba(248, 113, 113, 0.12);
+    --on-destructive: #0F172A;
+
+    /* Dark: emerald progression (light hint → solid glow) */
+    --chip-pending-bg: rgba(148, 163, 184, 0.15);  /* slate-400 @ 15% */
+    --chip-pending-fg: #94A3B8;                    /* slate-400 */
+    --chip-reviewing-bg: rgba(16, 185, 129, 0.12); /* emerald-500 @ 12% */
+    --chip-reviewing-fg: #A7F3D0;                  /* emerald-200 */
+    --chip-executing-bg: rgba(16, 185, 129, 0.22); /* emerald-500 @ 22% */
+    --chip-executing-fg: #6EE7B7;                  /* emerald-300 */
+    --chip-done-bg: rgba(52, 211, 153, 0.35);      /* emerald-400 @ 35% — strongest */
+    --chip-done-fg: #D1FAE5;                       /* emerald-100 */
+    --chip-rejected-bg: rgba(239, 68, 68, 0.18);   /* red-500 @ 18% */
+    --chip-rejected-fg: #FCA5A5;                   /* red-300 */
+
+    --ring: rgba(52, 211, 153, 0.6);
+
+    /* Tactile shadows & glows - Dark */
+    --shadow-tactile: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.2);
+    --shadow-inner-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
   }
 
   html {
@@ -21,49 +90,70 @@
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--bg);
+    color: var(--fg);
   }
 
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
 
-  /* Consistent focus ring for keyboard navigation (accessibility) */
   :focus-visible {
-    outline: 2px solid oklch(0.55 0.18 250);
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
     border-radius: 8px;
   }
 
-  /* Remove default focus for mouse users */
   :focus:not(:focus-visible) {
     outline: none;
   }
 }
 
 @layer utilities {
-  /* Gentle page entrance — professional, not flashy */
   .animate-in {
-    animation: fade-up 0.3s ease-out both;
+    animation: fade-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   @keyframes fade-up {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Respect reduced motion preference */
+  .animate-sheet-up {
+    animation: sheet-up 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+
+  @keyframes sheet-up {
+    from { opacity: 0; transform: translateY(100%); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-100%); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .animate-in {
+    .animate-in,
+    .animate-sheet-up,
+    .animate-fade-in,
+    .animate-slide-in-left {
       animation: none;
       opacity: 1;
+      transform: none;
     }
     .animate-pulse {
       animation: none;

@@ -36,3 +36,9 @@ yarn-error.log*
 next-env.d.ts
 .env.local
 .impeccable.md
+
+# Shino AI working memory (per-session state, not a project artifact)
+/memory/.superpowers/
+
+# Brainstorm visual companion sessions
+/.superpowers/

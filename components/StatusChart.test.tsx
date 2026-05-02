@@ -20,6 +20,6 @@ describe('StatusChart', () => {
       { name: 'Proses', value: 5, color: '#f97316' },
     ];
     render(<StatusChart data={mockData} />);
-    expect(screen.getByText('Taburan Status Semasa')).toBeInTheDocument();
+    expect(screen.getByText('Taburan Status')).toBeInTheDocument();
   });
 });

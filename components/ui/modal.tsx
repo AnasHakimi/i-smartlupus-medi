@@ -1,0 +1,60 @@
+"use client";
+
+import * as Dialog from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+
+interface ModalProps {
+  trigger: ReactNode;
+  title: ReactNode;
+  description?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}
+
+export function Modal({ trigger, title, description, children, className }: ModalProps) {
+  return (
+    <Dialog.Root>
+      <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay
+          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm animate-fade-in"
+        />
+        <Dialog.Content
+          className={cn(
+            "fixed z-50 bg-[var(--surface)] shadow-lg text-[var(--fg)]",
+            "bottom-0 left-0 right-0 rounded-t-2xl p-6 animate-sheet-up",
+            "sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2",
+            "sm:max-w-[480px] sm:w-full sm:rounded-2xl sm:animate-in",
+            "focus:outline-none",
+            className,
+          )}
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <Dialog.Title className="text-title-3 font-semibold text-[var(--fg)]">
+                {title}
+              </Dialog.Title>
+              {description && (
+                <Dialog.Description className="text-footnote text-[var(--fg-muted)] mt-1">
+                  {description}
+                </Dialog.Description>
+              )}
+            </div>
+            <Dialog.Close asChild>
+              <button
+                type="button"
+                aria-label="Tutup"
+                className="-mr-2 p-2 rounded-md text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </Dialog.Close>
+          </div>
+          <div className="mt-4">{children}</div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
