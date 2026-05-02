@@ -5,7 +5,6 @@ import { StatusChip } from "./StatusChip";
 describe("StatusChip", () => {
   it("renders Malay label for each status", () => {
     const cases = [
-      { status: "BARU", label: "Baru" },
       { status: "menunggu_semakan", label: "Menunggu Semakan" },
       { status: "proses_pelupusan", label: "Proses Pelupusan" },
       { status: "selesai", label: "Selesai" },

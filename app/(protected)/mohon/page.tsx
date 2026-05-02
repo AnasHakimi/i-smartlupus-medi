@@ -2,19 +2,27 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Send, Package } from "lucide-react";
+import { Send, AlertCircle, Camera } from "lucide-react";
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
-import type { AssetCondition } from "@/lib/supabase/types";
-import { ASSET_CONDITIONS } from "@/lib/constants";
+import type { AssetCondition, AssetCategory, AssetSubCategory } from "@/lib/supabase/types";
+import { ASSET_CONDITIONS, ASSET_CATEGORIES, ASSET_SUB_CATEGORIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function MohonPage() {
   const router = useRouter();
   const supabase = createClient();
 
   const [assetName, setAssetName] = useState("");
+  const [category, setCategory] = useState<AssetCategory>("harta_modal");
+  const [subCategory, setSubCategory] = useState<AssetSubCategory>("alat_perubatan");
+  const [serialNo, setSerialNo] = useState("");
+  const [assetType, setAssetType] = useState("");
+  const [purchaseDate, setPurchaseDate] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState("");
   const [inventoryId, setInventoryId] = useState("");
   const [assetCondition, setAssetCondition] = useState<AssetCondition>("rosak");
   const [location, setLocation] = useState("");
@@ -41,29 +49,26 @@ export default function MohonPage() {
         return;
       }
 
-      const { data: ticket, error: insertError } = await supabase
-        .from("disposal_tickets")
-        .insert({
-          asset_name: assetName.trim(),
-          inventory_id: inventoryId.trim() || null,
-          asset_condition: assetCondition,
-          location: location.trim() || null,
-          created_by: user.id,
-        })
-        .select("id, ticket_no")
-        .single();
+      const { data: ticket, error: insertError } = await supabase.rpc(
+        "submit_disposal_ticket",
+        {
+          p_asset_name: assetName.trim(),
+          p_asset_condition: assetCondition,
+          p_inventory_id: inventoryId.trim() || null,
+          p_location: location.trim() || null,
+          p_category: category,
+          p_sub_category: subCategory,
+          p_serial_no: serialNo.trim() || null,
+          p_asset_type: assetType.trim() || null,
+          p_purchase_date: purchaseDate || null,
+          p_purchase_price: purchasePrice ? parseFloat(purchasePrice) : null,
+        },
+      );
 
       if (insertError || !ticket) {
         toast.error("Permohonan gagal dihantar. Sila cuba lagi.");
         return;
       }
-
-      await supabase.from("audit_logs").insert({
-        ticket_id: ticket.id,
-        action: "permohonan_dibuat",
-        new_value: "menunggu_semakan",
-        performed_by: user.id,
-      });
 
       toast.success(`Permohonan ${ticket.ticket_no} berjaya dihantar!`);
       router.push("/status");
@@ -76,120 +81,212 @@ export default function MohonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-lg">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <Package className="h-6 w-6 text-blue-600" />
-            Permohonan Baru
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Mohon pelupusan aset perubatan
-          </p>
-        </div>
+    <div className="space-y-6 animate-in">
+      {/* Header */}
+      <header className="py-2">
+        <h1 className="text-display font-bold text-[var(--fg)] tracking-tight">
+          Permohonan Baru
+        </h1>
+        <p className="text-body font-medium text-[var(--fg-muted)] mt-1">
+          Sila lengkapkan butiran aset
+        </p>
+      </header>
 
-        {/* Form Card */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Nama Aset */}
-            <div className="space-y-1.5">
-              <label
-                htmlFor="asset-name"
-                className="block text-sm font-medium text-slate-700"
-              >
-                Nama Aset{" "}
-                <span className="text-red-500" aria-hidden="true">
-                  *
-                </span>
-              </label>
-              <input
-                id="asset-name"
-                type="text"
-                required
-                value={assetName}
-                onChange={(e) => setAssetName(e.target.value)}
-                placeholder="Cth: Kerusi Roda Pesakit"
-                className="w-full rounded-lg border border-slate-300 px-3 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* No. Inventori */}
-            <div className="space-y-1.5">
-              <label
-                htmlFor="inventory-id"
-                className="block text-sm font-medium text-slate-700"
-              >
-                No. Inventori
-              </label>
-              <input
-                id="inventory-id"
-                type="text"
-                value={inventoryId}
-                onChange={(e) => setInventoryId(e.target.value)}
-                placeholder="Cth: INV-2024-001"
-                className="w-full rounded-lg border border-slate-300 px-3 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* Keadaan Aset */}
-            <div className="space-y-1.5">
-              <span className="block text-sm font-medium text-slate-700">
-                Keadaan Aset{" "}
-                <span className="text-red-500" aria-hidden="true">
-                  *
-                </span>
+      {/* Form Card */}
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6 shadow-none">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="space-y-6">
+            {/* Kategori Aset */}
+            <div className="space-y-2">
+              <span className="text-subhead font-medium text-[var(--fg)]">
+                Kategori Aset
+                <span className="text-[var(--destructive)] ml-0.5" aria-hidden="true">*</span>
               </span>
-              <div className="flex gap-3">
-                {(Object.keys(ASSET_CONDITIONS) as AssetCondition[]).map(
-                  (condition) => (
+              <div className="flex gap-2">
+                {(Object.keys(ASSET_CATEGORIES) as AssetCategory[]).map((cat) => {
+                  const isActive = category === cat;
+                  return (
                     <button
-                      key={condition}
+                      key={cat}
                       type="button"
-                      onClick={() => setAssetCondition(condition)}
+                      onClick={() => setCategory(cat)}
                       className={cn(
-                        "flex-1 rounded-lg border px-4 py-3 text-sm font-medium transition-colors",
-                        assetCondition === condition
-                          ? "border-blue-600 bg-blue-600 text-white"
-                          : "border-slate-300 bg-white text-slate-700 hover:border-blue-400 hover:text-blue-600"
+                        "flex-1 h-11 rounded-md border text-subhead font-medium transition-all active:scale-95 flex items-center justify-center gap-2",
+                        isActive
+                          ? "bg-[var(--primary)] text-[var(--on-primary)] border-[var(--primary)] shadow-sm"
+                          : "bg-[var(--bg)] text-[var(--fg-muted)] border-[var(--border)] hover:border-[var(--border-strong)]"
                       )}
                     >
-                      {ASSET_CONDITIONS[condition]}
+                      {ASSET_CATEGORIES[cat]}
                     </button>
-                  )
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Sub-Kategori */}
+            <div className="space-y-3">
+              <span className="text-subhead font-medium text-[var(--fg)]">
+                Sub-Kategori
+                <span className="text-[var(--destructive)] ml-0.5" aria-hidden="true">*</span>
+              </span>
+              <div className="grid grid-cols-1 gap-2">
+                {(Object.keys(ASSET_SUB_CATEGORIES) as AssetSubCategory[]).map((sub) => {
+                  const isActive = subCategory === sub;
+                  return (
+                    <button
+                      key={sub}
+                      type="button"
+                      onClick={() => setSubCategory(sub)}
+                      className={cn(
+                        "flex items-center gap-3 px-4 h-12 rounded-md border text-body transition-all active:scale-[0.98]",
+                        isActive
+                          ? "bg-[var(--primary-tint)] text-[var(--primary)] border-[var(--primary)]"
+                          : "bg-[var(--surface)] text-[var(--fg-muted)] border-[var(--border)] hover:border-[var(--border-strong)]"
+                      )}
+                    >
+                      <div className={cn(
+                        "h-4 w-4 rounded-full border flex items-center justify-center transition-colors",
+                        isActive ? "border-[var(--primary)]" : "border-[var(--border-strong)]"
+                      )}>
+                        {isActive && <div className="h-2 w-2 rounded-full bg-[var(--primary)]" />}
+                      </div>
+                      {ASSET_SUB_CATEGORIES[sub]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* No. Siri Pendaftaran */}
+            <Input
+              label="No. Siri Pendaftaran"
+              required
+              value={serialNo}
+              onChange={(e) => setSerialNo(e.target.value)}
+              placeholder="Cth: KKM/HOSP/2024/001"
+            />
+
+            {/* Jenis Aset */}
+            <Input
+              label="Jenis Aset"
+              required
+              value={assetType}
+              onChange={(e) => setAssetType(e.target.value)}
+              placeholder="Cth: Kerusi, Ventilator"
+            />
+
+            {/* Nama Aset */}
+            <Input
+              label="Nama Aset"
+              required
+              value={assetName}
+              onChange={(e) => setAssetName(e.target.value)}
+              placeholder="Cth: Kerusi Roda Pesakit"
+            />
+
+            {/* Tarikh Perolehan */}
+            <Input
+              label="Tarikh Perolehan"
+              required
+              type="date"
+              value={purchaseDate}
+              onChange={(e) => setPurchaseDate(e.target.value)}
+            />
+
+            {/* Harga Perolehan */}
+            <Input
+              label="Harga Perolehan"
+              required
+              type="number"
+              step="0.01"
+              value={purchasePrice}
+              onChange={(e) => setPurchasePrice(e.target.value)}
+              placeholder="0.00"
+              trailing={<span className="text-footnote font-bold text-[var(--fg-muted)] pr-4">RM</span>}
+            />
+
+            {/* No. Inventori */}
+            <Input
+              label="No. Inventori"
+              value={inventoryId}
+              onChange={(e) => setInventoryId(e.target.value)}
+              placeholder="Cth: INV-2024-001"
+              helper="Biarkan kosong jika tiada no. inventori."
+            />
+
+            {/* Keadaan Aset */}
+            <div className="space-y-2">
+              <span className="text-subhead font-medium text-[var(--fg)]">
+                Keadaan Aset
+                <span className="text-[var(--destructive)] ml-0.5" aria-hidden="true">*</span>
+              </span>
+              <div className="flex gap-2">
+                {(Object.keys(ASSET_CONDITIONS) as AssetCondition[]).map(
+                  (condition) => {
+                    const isActive = assetCondition === condition;
+                    return (
+                      <button
+                        key={condition}
+                        type="button"
+                        onClick={() => setAssetCondition(condition)}
+                        className={cn(
+                          "flex-1 h-11 rounded-md border text-subhead font-medium transition-all active:scale-95 flex items-center justify-center gap-2",
+                          isActive
+                            ? "bg-[var(--primary)] text-[var(--on-primary)] border-[var(--primary)] shadow-sm"
+                            : "bg-[var(--bg)] text-[var(--fg-muted)] border-[var(--border)] hover:border-[var(--border-strong)]"
+                        )}
+                      >
+                        {isActive && <AlertCircle size={14} />}
+                        {ASSET_CONDITIONS[condition]}
+                      </button>
+                    );
+                  }
                 )}
               </div>
             </div>
 
             {/* Lokasi */}
-            <div className="space-y-1.5">
-              <label
-                htmlFor="location"
-                className="block text-sm font-medium text-slate-700"
-              >
-                Lokasi
-              </label>
-              <input
-                id="location"
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Cth: Wad 3A, Tingkat 2"
-                className="w-full rounded-lg border border-slate-300 px-3 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
+            <Input
+              label="Lokasi"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Cth: Wad 3A, Tingkat 2"
+            />
+            
+            {/* Foto Aset Section */}
+            <div className="space-y-2">
+              <span className="text-subhead font-medium text-[var(--fg)] flex items-center gap-2">
+                <Camera size={16} className="text-[var(--primary)]" />
+                Foto Aset
+              </span>
+              <p className="text-footnote text-[var(--fg-muted)] mb-4">
+                Sila ambil gambar aset sebagai bukti keadaan semasa. Anda boleh memuat naik foto selepas menghantar permohonan di halaman butiran tiket.
+              </p>
+              <div className="p-4 rounded-md bg-[var(--bg)] border border-[var(--border)] border-dashed text-center">
+                 <p className="text-footnote text-[var(--fg-muted)] italic">
+                   Fungsi ambil foto di sini akan diaktifkan sebaik sahaja permohonan dihantar.
+                 </p>
+              </div>
             </div>
+          </div>
 
-            {/* Submit Button */}
-            <button
+          {/* Submit Button */}
+          <div className="pt-2">
+            <Button
               type="submit"
-              disabled={isLoading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+              size="lg"
+              className="w-full gap-2"
+              loading={isLoading}
             >
-              <Send className="h-4 w-4" />
-              {isLoading ? "Menghantar..." : "Hantar Permohonan"}
-            </button>
-          </form>
-        </div>
+              <Send className="h-5 w-5" />
+              Hantar Permohonan
+            </Button>
+            <p className="text-center text-caption text-[var(--fg-muted)] mt-4">
+              Pastikan maklumat aset adalah tepat sebelum menghantar.
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );

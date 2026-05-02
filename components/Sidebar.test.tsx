@@ -8,7 +8,7 @@ vi.mock("next/navigation", () => ({
 
 describe("Sidebar", () => {
   it("renders nav items for the role", () => {
-    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} />);
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} onLogOut={() => {}} />);
     expect(screen.getByText("Utama")).toBeInTheDocument();
     expect(screen.getByText("Pengguna")).toBeInTheDocument();
     expect(screen.getByText("Semua")).toBeInTheDocument();
@@ -16,24 +16,24 @@ describe("Sidebar", () => {
   });
 
   it("shows user footer when expanded", () => {
-    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} />);
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} onLogOut={() => {}} />);
     expect(screen.getByText("Anas Hakimi")).toBeInTheDocument();
   });
 
   it("hides labels and footer when collapsed", () => {
-    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={true} />);
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={true} onLogOut={() => {}} />);
     expect(screen.queryByText("Utama")).not.toBeInTheDocument();
     expect(screen.queryByText("Anas Hakimi")).not.toBeInTheDocument();
   });
 
   it("does not render a collapse toggle button (AppHeader owns it)", () => {
-    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} />);
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} onLogOut={() => {}} />);
     expect(screen.queryByLabelText("Runtuhkan bar sisi")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Kembangkan bar sisi")).not.toBeInTheDocument();
   });
 
   it("marks the active route with aria-current", () => {
-    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} />);
+    render(<Sidebar role="admin" name="Anas Hakimi" collapsed={false} onLogOut={() => {}} />);
     const utamaLink = screen.getByText("Utama").closest("a");
     expect(utamaLink).toHaveAttribute("aria-current", "page");
   });

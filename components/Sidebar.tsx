@@ -12,6 +12,7 @@ import {
   Users,
   FilePlus,
   LayoutList,
+  LogOut,
   type LucideIcon,
 } from "lucide-react";
 import { NAV_ITEMS, ROLE_LABELS } from "@/lib/constants";
@@ -30,31 +31,14 @@ const ICON_MAP: Record<string, LucideIcon> = {
   LayoutList,
 };
 
-type AvatarRole = "pemohon" | "penyemak" | "pentadbir";
-function avatarRole(role: UserRole): AvatarRole {
-  if (role === "user") return "pemohon";
-  if (role === "unit_aset") return "penyemak";
-  return "pentadbir";
-}
-const avatarBg: Record<AvatarRole, string> = {
-  pemohon:   "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
-  penyemak:  "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
-  pentadbir: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300",
-};
-
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[1][0]).toUpperCase();
-}
-
 interface SidebarProps {
   role: UserRole;
   name: string;
   collapsed: boolean;
+  onLogOut: () => void;
 }
 
-export default function Sidebar({ role, name, collapsed }: SidebarProps) {
+export default function Sidebar({ role, name, collapsed, onLogOut }: SidebarProps) {
   const pathname = usePathname();
   const items = NAV_ITEMS[role];
   const roleLabel = ROLE_LABELS[role];
@@ -119,22 +103,21 @@ export default function Sidebar({ role, name, collapsed }: SidebarProps) {
         </ul>
       </nav>
 
-      {/* Footer (hidden when collapsed) */}
+      {/* Footer (User Details + Logout) */}
       {!collapsed && (
-        <div className="border-t border-[var(--border)] px-4 py-3 flex items-center gap-3">
-          <span
-            aria-label={name}
-            className={cn(
-              "inline-flex items-center justify-center h-10 w-10 rounded-full font-semibold text-footnote flex-shrink-0",
-              avatarBg[avatarRole(role)],
-            )}
-          >
-            {initials(name)}
-          </span>
+        <div className="mt-auto border-t border-[var(--border)] p-4 space-y-3">
           <div className="min-w-0">
-            <p className="text-subhead font-semibold text-[var(--fg)] truncate">{name}</p>
-            <p className="text-caption text-[var(--fg-muted)]">{roleLabel}</p>
+            <p className="text-subhead font-bold text-[var(--fg)] truncate">{name}</p>
+            <p className="text-caption font-medium text-[var(--fg-muted)]">{roleLabel}</p>
           </div>
+          <button
+            type="button"
+            onClick={onLogOut}
+            className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-md text-subhead font-semibold text-[var(--destructive)] hover:bg-[var(--destructive-tint)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--destructive)]"
+          >
+            <LogOut className="h-4 w-4 shrink-0" />
+            <span>Log Keluar</span>
+          </button>
         </div>
       )}
     </aside>

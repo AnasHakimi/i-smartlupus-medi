@@ -35,6 +35,13 @@ export function formatDateTime(date: string | Date): string {
   });
 }
 
+export function formatCurrency(value: number): string {
+  return new Intl.NumberFormat("ms-MY", {
+    style: "currency",
+    currency: "MYR",
+  }).format(value);
+}
+
 export function cn(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(" ");
 }

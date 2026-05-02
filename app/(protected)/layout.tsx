@@ -92,6 +92,7 @@ export default function ProtectedLayout({
         role={profile.role}
         name={profile.full_name}
         collapsed={collapsed}
+        onLogOut={handleLogOut}
       />
       <main
         className={cn(

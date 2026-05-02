@@ -2,7 +2,6 @@ import { Chip, type ChipTone } from "@/components/ui/chip";
 import type { TicketStatus } from "@/lib/supabase/types";
 
 const toneMap: Record<TicketStatus, ChipTone> = {
-  BARU: "neutral",
   menunggu_semakan: "pending",
   proses_pelupusan: "executing",
   selesai: "done",
@@ -10,7 +9,6 @@ const toneMap: Record<TicketStatus, ChipTone> = {
 };
 
 const labelMap: Record<TicketStatus, string> = {
-  BARU: "Baru",
   menunggu_semakan: "Menunggu Semakan",
   proses_pelupusan: "Proses Pelupusan",
   selesai: "Selesai",

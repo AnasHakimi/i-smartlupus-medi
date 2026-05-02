@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -27,6 +28,16 @@ export default function StatusChart({
   title = "Taburan Status",
   subtitle = "Ringkasan tiket pelupusan aset",
 }: StatusChartProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <div className="h-[200px] w-full" />;
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div>

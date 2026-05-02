@@ -49,10 +49,9 @@ describe("AppHeader", () => {
     expect(screen.getByLabelText("Kembangkan bar sisi")).toBeInTheDocument();
   });
 
-  it("renders hamburger button for mobile with visibility classes", () => {
+  it("renders hamburger button for mobile", () => {
     renderHeader();
-    const btn = screen.getByLabelText("Buka menu");
-    expect(btn.className).toMatch(/inline-flex md:hidden/);
+    expect(screen.getByLabelText("Buka menu")).toBeInTheDocument();
   });
 
   it("fires onToggleSidebar when chevron clicked", () => {

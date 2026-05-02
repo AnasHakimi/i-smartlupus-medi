@@ -29,14 +29,14 @@ const sizes: Record<Size, string> = {
 
 const variants: Record<Variant, string> = {
   primary:
-    "font-semibold bg-[var(--primary)] text-[var(--on-primary)] hover:bg-[var(--primary-hover)]",
+    "font-bold bg-[var(--primary)] text-[var(--on-primary)] hover:bg-[var(--primary-hover)] shadow-[var(--shadow-tactile),var(--shadow-inner-glow)]",
   secondary:
-    "font-medium bg-[var(--primary-tint)] text-[var(--primary)] " +
-    "hover:brightness-95 dark:hover:brightness-110",
+    "font-semibold bg-[var(--surface-elevated)] text-[var(--fg)] border border-[var(--border-strong)] " +
+    "hover:bg-[var(--primary-tint)] hover:text-[var(--primary)] shadow-sm",
   destructive:
-    "font-semibold bg-[var(--destructive)] text-[var(--on-destructive)] hover:brightness-95",
+    "font-bold bg-[var(--destructive)] text-[var(--on-destructive)] hover:brightness-95 shadow-[var(--shadow-tactile),var(--shadow-inner-glow)]",
   ghost:
-    "font-medium bg-transparent text-[var(--primary)] hover:bg-[var(--primary-tint)]",
+    "font-medium bg-transparent text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] hover:text-[var(--primary)]",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

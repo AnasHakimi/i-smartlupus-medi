@@ -2,9 +2,10 @@
 
 import { useState, useRef } from "react";
 import NextImage from "next/image";
-import { Camera, X } from "lucide-react";
+import { Camera, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
 
 async function compressImage(file: File, maxWidth = 800, quality = 0.7): Promise<Blob> {
   return new Promise((resolve) => {
@@ -25,7 +26,7 @@ async function compressImage(file: File, maxWidth = 800, quality = 0.7): Promise
 
 interface PhotoUploadProps {
   ticketId: string;
-  onUploaded: (url: string) => void;
+  onUploaded: (path: string) => void;
 }
 
 export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) {
@@ -38,8 +39,14 @@ export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) 
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Phase 2: MIME and Size validation
     if (!file.type.startsWith("image/")) {
-      toast.error("Sila pilih fail gambar.");
+      toast.error("Format fail tidak sah. Sila pilih fail gambar.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // Reduced to 5MB for PWA performance
+      toast.error("Saiz gambar terlalu besar. Maksimum 5MB.");
       return;
     }
 
@@ -54,14 +61,27 @@ export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) 
 
       if (error) throw error;
 
-      const { data } = supabase.storage.from("disposal-files").getPublicUrl(path);
-      const publicUrl = data.publicUrl;
+      // Phase 4: Use database function for security
+      const { error: attachError } = await supabase.rpc(
+        "attach_disposal_photo",
+        {
+          p_ticket_id: ticketId,
+          p_image_path: path,
+        },
+      );
 
-      setPreview(publicUrl);
-      onUploaded(publicUrl);
-      toast.success("Foto berjaya dimuat naik.");
+      if (attachError) throw attachError;
+
+      const { data, error: signedUrlError } = await supabase.storage
+        .from("disposal-files")
+        .createSignedUrl(path, 60 * 60);
+
+      if (signedUrlError) throw signedUrlError;
+
+      setPreview(data.signedUrl);
+      onUploaded(path);
+      toast.success("Foto aset berjaya dimuat naik.");
     } catch {
-      // Error logged silently — toast already shown to user
       toast.error("Gagal memuat naik foto.");
     } finally {
       setLoading(false);
@@ -76,17 +96,23 @@ export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) 
   return (
     <div className="w-full">
       {preview ? (
-        <div className="relative rounded-xl overflow-hidden">
-          <div className="relative w-full h-48 rounded-xl overflow-hidden">
-            <NextImage src={preview} alt="Pratonton foto aset" fill className="object-cover" unoptimized />
+        <div className="relative group animate-in">
+          <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden border border-[var(--border)]">
+            <NextImage 
+              src={preview} 
+              alt="Pratonton foto aset" 
+              fill 
+              className="object-cover" 
+              unoptimized 
+            />
           </div>
           <button
             type="button"
             onClick={handleRemove}
-            className="absolute top-2 right-2 bg-white rounded-full p-3.5 shadow-md"
+            className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm text-[var(--destructive)] hover:bg-[var(--destructive)] hover:text-white transition-all active:scale-95"
             aria-label="Buang gambar"
           >
-            <X className="h-4 w-4 text-slate-700" />
+            <X className="h-4 w-4" />
           </button>
         </div>
       ) : (
@@ -94,12 +120,28 @@ export default function PhotoUpload({ ticketId, onUploaded }: PhotoUploadProps) 
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={loading}
-          className="w-full flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 py-8 text-slate-500 hover:border-slate-400 hover:text-slate-600 transition-colors disabled:opacity-50"
+          className={cn(
+            "w-full flex flex-col items-center justify-center gap-3 rounded-md border-2 border-dashed py-10 transition-all active:scale-[0.99]",
+            loading 
+              ? "bg-[var(--muted)] border-[var(--border)] cursor-not-allowed" 
+              : "bg-[var(--surface)] border-[var(--border)] text-[var(--fg-muted)] hover:border-[var(--primary)] hover:bg-[var(--primary-tint)] hover:text-[var(--primary)]"
+          )}
         >
-          <Camera className="h-8 w-8" />
-          <span className="text-sm font-medium">
-            {loading ? "Memuat naik..." : "Tekan untuk ambil gambar"}
-          </span>
+          {loading ? (
+            <Loader2 className="h-8 w-8 animate-spin" />
+          ) : (
+            <div className="p-4 rounded-full bg-[var(--bg)] text-[var(--fg-muted)] transition-colors group-hover:bg-white">
+              <Camera className="h-8 w-8" />
+            </div>
+          )}
+          <div className="text-center space-y-1">
+            <span className="text-body font-semibold">
+              {loading ? "Sedang memuat naik..." : "Ambil Foto Aset"}
+            </span>
+            {!loading && (
+              <p className="text-caption opacity-60">Format JPG atau PNG (Maks 5MB)</p>
+            )}
+          </div>
         </button>
       )}
 

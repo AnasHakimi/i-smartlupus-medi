@@ -41,12 +41,32 @@ export default function BottomNav({ role }: BottomNavProps) {
   return (
     <nav
       aria-label="Menu utama"
-      className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t border-[var(--border)] bg-[var(--surface)] md:hidden"
+      className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t border-[var(--border)] bg-[var(--surface)] md:hidden pb-safe"
     >
-      <div className="flex h-full items-center justify-around">
-        {items.map((item) => {
+      <div className="relative flex h-full items-center justify-around px-2">
+        {items.map((item, index) => {
           const Icon = ICON_MAP[item.icon] ?? Home;
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const isCenter = index === 2;
+
+          if (isCenter) {
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-label={item.label}
+                className={cn(
+                  "relative -top-4 flex h-20 w-20 flex-col items-center justify-center rounded-full shadow-lg transition-transform active:scale-95",
+                  "bg-[var(--primary)] text-[var(--on-primary)]",
+                )}
+              >
+                <Icon className="h-7 w-7 stroke-[2.5]" aria-hidden />
+                <span className="text-[10px] font-bold tracking-tight mt-1 uppercase">
+                  {item.label}
+                </span>
+              </Link>
+            );
+          }
 
           return (
             <Link
@@ -55,14 +75,12 @@ export default function BottomNav({ role }: BottomNavProps) {
               aria-label={item.label}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex flex-col items-center justify-center gap-1 px-3 min-h-[56px] rounded-lg transition-colors",
-                isActive
-                  ? "text-[var(--primary)] bg-[var(--primary-tint)]"
-                  : "text-[var(--fg-muted)]",
+                "flex flex-col items-center justify-center gap-1 min-w-[64px] transition-colors",
+                isActive ? "text-[var(--primary)]" : "text-[var(--fg-muted)]",
               )}
             >
-              <Icon className={isActive ? "h-6 w-6 stroke-[2.5]" : "h-6 w-6 stroke-[2]"} aria-hidden />
-              <span className={cn("text-[11px] font-semibold tracking-tight", !isActive && "opacity-80")}>
+              <Icon className={cn("h-5 w-5", isActive ? "stroke-[2.5]" : "stroke-[2]")} aria-hidden />
+              <span className={cn("text-[10px] font-semibold tracking-tight")}>
                 {item.label}
               </span>
             </Link>

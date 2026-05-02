@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FileText } from "lucide-react";
+import { FileText, Award } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 
 import { createClient } from "@/lib/supabase/client";
 import type { DisposalTicket } from "@/lib/supabase/types";
-import { DISPOSAL_METHODS, ASSET_CONDITIONS } from "@/lib/constants";
+import { DISPOSAL_METHODS, ASSET_CONDITIONS, ASSET_CATEGORIES, ASSET_SUB_CATEGORIES } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
+import { formatCurrency } from "@/lib/utils";
 
 interface Props {
   ticket: DisposalTicket;
@@ -45,6 +47,10 @@ function generateCertPdf(ticket: DisposalTicket, officerName: string): Blob {
     ticket.asset_condition ? ASSET_CONDITIONS[ticket.asset_condition] ?? ticket.asset_condition : "-";
   const methodLabel =
     ticket.disposal_method ? DISPOSAL_METHODS[ticket.disposal_method] ?? ticket.disposal_method : "-";
+  const categoryLabel =
+    ticket.category ? ASSET_CATEGORIES[ticket.category] ?? ticket.category : "-";
+  const subCategoryLabel =
+    ticket.sub_category ? ASSET_SUB_CATEGORIES[ticket.sub_category] ?? ticket.sub_category : "-";
 
   const doc = new jsPDF();
 
@@ -65,7 +71,13 @@ function generateCertPdf(ticket: DisposalTicket, officerName: string): Blob {
   // Details table
   const details: Array<[string, string]> = [
     ["Nama Aset", ticket.asset_name ?? "-"],
+    ["Jenis Aset", ticket.asset_type ?? "-"],
+    ["Kategori", categoryLabel],
+    ["Sub-Kategori", subCategoryLabel],
+    ["No. Siri Pendaftaran", ticket.serial_no ?? "-"],
     ["No. Inventori", inventoryId],
+    ["Tarikh Perolehan", formatDate(ticket.purchase_date)],
+    ["Harga Perolehan", ticket.purchase_price ? formatCurrency(ticket.purchase_price) : "-"],
     ["Keadaan", conditionLabel],
     ["Lokasi", location],
     ["Kaedah Pelupusan", methodLabel],
@@ -130,40 +142,21 @@ export default function CertificateGenerator({ ticket, officerName }: Props) {
 
       if (uploadError) throw uploadError;
 
-      // 3. Get public URL
-      const { data: urlData } = supabase.storage
-        .from("disposal-files")
-        .getPublicUrl(storagePath);
-      const publicUrl = urlData.publicUrl;
-
-      // 4. Update ticket: cert_url
-      const { error: ticketError } = await supabase
-        .from("disposal_tickets")
-        .update({ cert_url: publicUrl })
-        .eq("id", ticket.id);
+      // 3. Attach certificate path and write audit log through the database boundary
+      const { error: ticketError } = await supabase.rpc(
+        "attach_disposal_certificate",
+        {
+          p_ticket_id: ticket.id,
+          p_cert_url: storagePath,
+        },
+      );
 
       if (ticketError) throw ticketError;
 
-      // 5. Get current user for audit log
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      // 6. Insert audit_log
-      const { error: logError } = await supabase.from("audit_logs").insert({
-        ticket_id: ticket.id,
-        performed_by: user?.id ?? null,
-        action: "sijil_dijana",
-        new_value: publicUrl,
-      });
-
-      if (logError) throw logError;
-
-      // 7. Toast + refresh
+      // 4. Toast + refresh
       toast.success("Sijil pelupusan berjaya dijana!");
       router.refresh();
     } catch {
-      // Error logged silently — toast already shown to user
       toast.error("Gagal menjana sijil. Sila cuba semula.");
     } finally {
       setLoading(false);
@@ -171,19 +164,27 @@ export default function CertificateGenerator({ ticket, officerName }: Props) {
   }
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
-      <p className="mb-4 text-xs font-black uppercase tracking-wider text-slate-400">
-        Sijil Pelupusan
+    <div className="rounded-xl bg-[var(--surface)] border border-[var(--border)] p-5 animate-in">
+      <div className="flex items-center gap-2 mb-4">
+        <Award className="h-4 w-4 text-[var(--primary)]" />
+        <p className="text-subhead font-semibold uppercase tracking-wider text-[var(--fg-muted)]">
+          Sijil Pelupusan
+        </p>
+      </div>
+      
+      <p className="text-footnote text-[var(--fg-muted)] mb-6">
+        Sijil rasmi pelupusan aset belum dijana untuk tiket ini.
       </p>
-      <button
-        type="button"
+
+      <Button
+        size="lg"
+        className="w-full gap-2"
+        loading={loading}
         onClick={handleGenerate}
-        disabled={loading}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white transition-opacity disabled:opacity-50"
       >
         <FileText size={18} />
-        {loading ? "Menjana sijil..." : "Jana Sijil Pelupusan"}
-      </button>
+        Jana Sijil Pelupusan
+      </Button>
     </div>
   );
 }

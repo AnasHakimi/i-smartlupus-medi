@@ -165,9 +165,9 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Greeting strip — flush, not a card */}
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex items-start justify-between gap-4 animate-in">
         <div className="min-w-0">
-          <h1 className="text-title-1 font-semibold text-[var(--fg)] tracking-tight">
+          <h1 className="text-display font-bold text-[var(--fg)] tracking-tight">
             {getGreeting()}, {profile.full_name.split(" ")[0]}
           </h1>
           <div className="mt-1.5 flex items-center gap-2 text-footnote text-[var(--fg-muted)]">
@@ -176,11 +176,10 @@ export default function DashboardPage() {
             <Chip tone="neutral">{ROLE_LABELS[profile.role]}</Chip>
           </div>
         </div>
-        <Avatar name={profile.full_name} role={avatarRole(profile.role)} size="lg" />
       </header>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-        <BentoCard>
+        <BentoCard className="animate-in [animation-delay:100ms]">
           <div className="flex items-start justify-between">
             <ClipboardList className="h-5 w-5 text-[var(--fg-muted)]" aria-hidden />
           </div>
@@ -189,7 +188,7 @@ export default function DashboardPage() {
           </div>
         </BentoCard>
 
-        <BentoCard>
+        <BentoCard className="animate-in [animation-delay:150ms]">
           <div className="flex items-start justify-between">
             <Clock className="h-5 w-5 text-[var(--chip-pending-fg)]" aria-hidden />
           </div>
@@ -198,7 +197,7 @@ export default function DashboardPage() {
           </div>
         </BentoCard>
 
-        <BentoCard>
+        <BentoCard className="animate-in [animation-delay:200ms]">
           <div className="flex items-start justify-between">
             <RefreshCw className="h-5 w-5 text-[var(--chip-executing-fg)]" aria-hidden />
           </div>
@@ -207,7 +206,7 @@ export default function DashboardPage() {
           </div>
         </BentoCard>
 
-        <BentoCard>
+        <BentoCard className="animate-in [animation-delay:250ms]">
           <div className="flex items-start justify-between">
             <CheckCircle2 className="h-5 w-5 text-[var(--chip-done-fg)]" aria-hidden />
           </div>
@@ -216,12 +215,12 @@ export default function DashboardPage() {
           </div>
         </BentoCard>
 
-        <BentoCard span={2} className="md:col-span-4">
+        <BentoCard span={2} className="md:col-span-4 animate-in [animation-delay:300ms]">
           <StatusChart data={chartData} />
         </BentoCard>
       </div>
 
-      <section className="space-y-3">
+      <section className="space-y-3 animate-in [animation-delay:400ms]">
         <div className="flex items-center justify-between">
           <h2 className="text-subhead font-semibold text-[var(--fg)]">Terkini</h2>
           <Link
@@ -243,7 +242,7 @@ export default function DashboardPage() {
             }
           />
         ) : (
-          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden">
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden shadow-[var(--shadow-tactile)]">
             {recent.map((t) => (
               <ListItem
                 key={t.id}
@@ -268,19 +267,6 @@ export default function DashboardPage() {
           </div>
         )}
       </section>
-
-      {profile.role === "user" && (
-        <Link
-          href="/mohon"
-          className="fixed right-4 bottom-24 md:bottom-8 md:right-8 z-40"
-          aria-label="Mohon baru"
-        >
-          <Button size="lg" className="shadow-lg rounded-full px-5 gap-2">
-            <Plus className="h-5 w-5" aria-hidden />
-            Mohon Baru
-          </Button>
-        </Link>
-      )}
     </div>
   );
 }

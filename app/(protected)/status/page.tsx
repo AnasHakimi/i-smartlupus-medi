@@ -4,8 +4,34 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { DisposalTicket } from "@/lib/supabase/types";
 import TicketCard from "@/components/TicketCard";
-import { TicketListSkeleton } from "@/components/Skeleton";
+import SkeletonPulse from "@/components/Skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { ClipboardList } from "lucide-react";
+
+function PageSkeleton() {
+  return (
+    <div className="space-y-6 animate-in">
+      <div className="space-y-2">
+        <SkeletonPulse className="h-8 w-48" />
+        <SkeletonPulse className="h-4 w-64" />
+      </div>
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl overflow-hidden shadow-none">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="px-4 py-4 border-b border-[var(--border)] last:border-0">
+            <div className="flex gap-3">
+              <div className="flex-1 space-y-2">
+                <SkeletonPulse className="h-4 w-24" />
+                <SkeletonPulse className="h-5 w-48" />
+                <SkeletonPulse className="h-3 w-32" />
+              </div>
+              <SkeletonPulse className="h-5 w-5 rounded shrink-0" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function StatusPage() {
   const [tickets, setTickets] = useState<DisposalTicket[]>([]);
@@ -29,36 +55,29 @@ export default function StatusPage() {
     load();
   }, []);
 
-  if (loading) return (
-    <div className="space-y-6" role="status">
-      <div>
-        <h1 className="text-2xl font-black text-slate-900">Status Permohonan</h1>
-        <p className="text-sm text-slate-500 mt-1">Senarai permohonan pelupusan anda</p>
-      </div>
-      <TicketListSkeleton count={4} />
-      <span className="sr-only">Memuatkan senarai permohonan...</span>
-    </div>
-  );
+  if (loading) return <PageSkeleton />;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-slate-900">Status Permohonan</h1>
-        <p className="text-sm text-slate-500 mt-1">Senarai permohonan pelupusan anda</p>
-      </div>
+    <div className="space-y-6 animate-in">
+      <header>
+        <h1 className="text-title-1 font-semibold text-[var(--fg)] tracking-tight">
+          Status Permohonan
+        </h1>
+        <p className="text-footnote text-[var(--fg-muted)] mt-1">
+          Senarai permohonan pelupusan aset perubatan anda
+        </p>
+      </header>
 
       {!tickets.length ? (
-        <div className="text-center py-16 px-6">
-          <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <ClipboardList className="w-8 h-8 text-blue-400" />
-          </div>
-          <p className="text-base font-semibold text-slate-700">Belum ada permohonan</p>
-          <p className="text-sm text-slate-400 mt-2 max-w-xs mx-auto">
-            Untuk memulakan pelupusan aset, tekan butang <strong className="text-blue-600">Mohon</strong> di menu bawah.
-          </p>
+        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl py-20 px-6">
+          <EmptyState
+            icon={<ClipboardList className="h-10 w-10 text-[var(--primary)] opacity-20" aria-hidden />}
+            title="Belum ada permohonan"
+            description="Untuk memulakan pelupusan aset, tekan butang Mohon Baru di menu bawah."
+          />
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl overflow-hidden shadow-none divide-y divide-[var(--border)]">
           {tickets.map((ticket) => (
             <TicketCard key={ticket.id} ticket={ticket} />
           ))}

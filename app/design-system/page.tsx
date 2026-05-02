@@ -20,7 +20,6 @@ import { Chip } from "@/components/ui/chip";
 import { ListItem } from "@/components/ui/list-item";
 import { BentoCard } from "@/components/ui/bento-card";
 import { Modal } from "@/components/ui/modal";
-import { BottomNav } from "@/components/ui/bottom-nav";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Stat } from "@/components/ui/stat";
 import { Avatar } from "@/components/ui/avatar";
@@ -339,20 +338,10 @@ export default function DesignSystemPage() {
         <section className="space-y-4 mt-10 pb-24">
           <h2 className="text-title-2 font-semibold">Bottom nav</h2>
           <p className="text-footnote text-[var(--fg-muted)]">
-            Sentiasa tersemat bahagian bawah pada mobile. Skrol ke bawah untuk lihat safe-area padding.
+            Dikeluarkan buat sementara waktu untuk reka bentuk baru.
           </p>
         </section>
       </main>
-
-      <BottomNav
-        items={[
-          { href: "/dashboard", label: "Utama", Icon: Home },
-          { href: "/mohon", label: "Mohon", Icon: Plus },
-          { href: "/semakan", label: "Semakan", Icon: ClipboardCheck },
-          { href: "/semua", label: "Semua", Icon: FileText },
-          { href: "/profil", label: "Profil", Icon: User },
-        ]}
-      />
     </div>
   );
 }

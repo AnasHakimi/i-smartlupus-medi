@@ -1,18 +1,49 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Users, UserPlus } from "lucide-react";
+import { Users, UserPlus, Shield, Building, CreditCard, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile, UserRole } from "@/lib/supabase/types";
 import { ROLE_LABELS } from "@/lib/constants";
-import { icToEmail, validateIc, formatIc } from "@/lib/utils";
+import { icToEmail, validateIc, formatIc, cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ListItem } from "@/components/ui/list-item";
+import { Avatar } from "@/components/ui/avatar";
+import SkeletonPulse from "@/components/Skeleton";
 
 const ROLE_OPTIONS: { value: UserRole; label: string }[] = [
   { value: "user", label: "Pengguna" },
   { value: "unit_aset", label: "Unit Aset" },
   { value: "admin", label: "Pentadbir" },
 ];
+
+function PageSkeleton() {
+  return (
+    <div className="space-y-6 animate-in">
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <SkeletonPulse className="h-8 w-48" />
+          <SkeletonPulse className="h-4 w-32" />
+        </div>
+        <SkeletonPulse className="h-10 w-32 rounded-md" />
+      </div>
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="px-4 py-4 border-b border-[var(--border)] last:border-0 flex items-center gap-3">
+            <SkeletonPulse className="h-10 w-10 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <SkeletonPulse className="h-4 w-48" />
+              <SkeletonPulse className="h-3 w-32" />
+            </div>
+            <SkeletonPulse className="h-6 w-20 rounded-sm" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function PenggunaPage() {
   const supabase = createClient();
@@ -106,176 +137,180 @@ export default function PenggunaPage() {
     }
   }
 
+  if (loading) return <PageSkeleton />;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <header className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <Users size={24} />
+          <h1 className="text-title-1 font-semibold text-[var(--fg)] tracking-tight flex items-center gap-2">
+            <Users size={24} className="text-[var(--primary)]" />
             Pengurusan Pengguna
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            {loading ? "Memuatkan..." : `${profiles.length} pengguna berdaftar`}
+          <p className="text-footnote text-[var(--fg-muted)] mt-1">
+            {profiles.length} pengguna berdaftar dalam sistem
           </p>
         </div>
-        <button
+        <Button
           onClick={() => setShowForm((prev) => !prev)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors"
+          variant={showForm ? "secondary" : "primary"}
+          className="shrink-0 gap-2"
         >
-          <UserPlus size={16} />
-          Daftar Baru
-        </button>
-      </div>
+          {showForm ? <ChevronUp size={16} /> : <UserPlus size={16} />}
+          {showForm ? "Tutup" : "Daftar Baru"}
+        </Button>
+      </header>
 
       {/* Registration Form */}
       {showForm && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-          <h2 className="text-base font-bold text-slate-800 mb-4">
-            Pendaftaran Pengguna Baharu
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* IC Number */}
-            <div>
-              <label htmlFor="reg-ic" className="block text-xs font-semibold text-slate-600 mb-1">
-                No. Kad Pengenalan <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="reg-ic"
+        <div className="bg-[var(--surface)] rounded-xl p-5 md:p-6 border border-[var(--border)] shadow-none animate-in">
+          <div className="flex items-center gap-2 mb-6">
+            <UserPlus size={18} className="text-[var(--primary)]" />
+            <h2 className="text-subhead font-semibold text-[var(--fg)] uppercase tracking-wider">
+              Pendaftaran Pengguna Baharu
+            </h2>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* IC Number */}
+              <Input
+                label="No. Kad Pengenalan"
+                required
                 type="text"
                 inputMode="numeric"
                 maxLength={12}
                 value={icNumber}
-                onChange={(e) =>
-                  setIcNumber(e.target.value.replace(/\D/g, "").slice(0, 12))
-                }
+                onChange={(e) => setIcNumber(e.target.value.replace(/\D/g, "").slice(0, 12))}
                 placeholder="cth. 901231071234"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
+                trailing={<CreditCard size={16} className="text-[var(--fg-muted)]" />}
               />
-            </div>
 
-            {/* Full Name */}
-            <div>
-              <label htmlFor="reg-name" className="block text-xs font-semibold text-slate-600 mb-1">
-                Nama Penuh <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="reg-name"
+              {/* Full Name */}
+              <Input
+                label="Nama Penuh"
+                required
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="cth. Ahmad bin Ali"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
               />
-            </div>
 
-            {/* Role */}
-            <div>
-              <label htmlFor="reg-role" className="block text-xs font-semibold text-slate-600 mb-1">
-                Peranan <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="reg-role"
-                value={role}
-                onChange={(e) => setRole(e.target.value as UserRole)}
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                required
-              >
-                {ROLE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+              {/* Role Selection */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-subhead font-medium text-[var(--fg)]">
+                  Peranan <span className="text-[var(--destructive)] ml-0.5">*</span>
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {ROLE_OPTIONS.map((opt) => {
+                    const isActive = role === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setRole(opt.value)}
+                        className={cn(
+                          "h-11 rounded-md border text-caption font-semibold transition-all active:scale-95 uppercase tracking-wide",
+                          isActive
+                            ? "bg-[var(--primary)] text-[var(--on-primary)] border-[var(--primary)] shadow-sm"
+                            : "bg-[var(--bg)] text-[var(--fg-muted)] border-[var(--border)] hover:border-[var(--border-strong)]"
+                        )}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-            {/* Unit / Jabatan */}
-            <div>
-              <label htmlFor="reg-unit" className="block text-xs font-semibold text-slate-600 mb-1">
-                Unit / Jabatan
-              </label>
-              <input
-                id="reg-unit"
+              {/* Unit / Jabatan */}
+              <Input
+                label="Unit / Jabatan"
                 type="text"
                 value={unitName}
                 onChange={(e) => setUnitName(e.target.value)}
                 placeholder="cth. Unit Aset Tetap"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                trailing={<Building size={16} className="text-[var(--fg-muted)]" />}
               />
-            </div>
 
-            {/* Password */}
-            <div>
-              <label htmlFor="reg-password" className="block text-xs font-semibold text-slate-600 mb-1">
-                Kata Laluan <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="reg-password"
+              {/* Password */}
+              <Input
+                label="Kata Laluan"
+                required
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Minimum 6 aksara"
                 minLength={6}
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
+                trailing={<Shield size={16} className="text-[var(--fg-muted)]" />}
+                helper="Gunakan kata laluan sementara yang selamat."
               />
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3 pt-2">
-              <button
+            <div className="flex gap-3 pt-4 border-t border-[var(--border)]">
+              <Button
                 type="submit"
-                disabled={submitting}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-sm font-semibold py-3 rounded-xl transition-colors"
+                loading={submitting}
+                className="flex-1"
               >
-                {submitting ? "Mendaftar..." : "Daftar Pengguna"}
-              </button>
-              <button
+                Daftar Pengguna
+              </Button>
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={() => {
                   resetForm();
                   setShowForm(false);
                 }}
-                className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 border border-slate-200 rounded-xl transition-colors"
               >
                 Batal
-              </button>
+              </Button>
             </div>
           </form>
         </div>
       )}
 
       {/* User List */}
-      <div className="space-y-3">
-        {loading ? (
-          <p className="text-sm text-slate-400 text-center py-8">
-            Memuatkan senarai pengguna...
-          </p>
-        ) : profiles.length === 0 ? (
-          <p className="text-sm text-slate-400 text-center py-8">
-            Tiada pengguna berdaftar.
-          </p>
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl overflow-hidden shadow-none divide-y divide-[var(--border)]">
+        {profiles.length === 0 ? (
+          <div className="py-20 text-center text-[var(--fg-muted)]">
+            <Users className="h-10 w-10 mx-auto opacity-10 mb-2" />
+            <p className="text-subhead font-medium">Tiada pengguna berdaftar.</p>
+          </div>
         ) : (
-          profiles.map((profile) => (
-            <div
-              key={profile.id}
-              className="bg-white rounded-xl p-4 shadow-sm border border-slate-100 flex items-center justify-between gap-3"
-            >
-              <div className="min-w-0">
-                <p className="text-sm font-bold text-slate-900 truncate">
-                  {profile.full_name}
-                </p>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  {formatIc(profile.ic_number)}
-                  {profile.unit_name ? ` · ${profile.unit_name}` : ""}
-                </p>
-              </div>
-              <span className="shrink-0 bg-blue-50 text-blue-600 text-xs font-semibold uppercase px-3 py-1 rounded-full">
-                {ROLE_LABELS[profile.role]}
-              </span>
-            </div>
+          profiles.map((p) => (
+            <ListItem
+              key={p.id}
+              leading={
+                <Avatar 
+                  name={p.full_name} 
+                  role={p.role === "user" ? "pemohon" : p.role === "unit_aset" ? "penyemak" : "pentadbir"} 
+                />
+              }
+              title={
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-[var(--fg)]">{p.full_name}</span>
+                </div>
+              }
+              subtitle={
+                <div className="flex items-center gap-1.5 tabular-nums">
+                  <span>{formatIc(p.ic_number)}</span>
+                  {p.unit_name && (
+                    <>
+                      <span aria-hidden className="text-[var(--border-strong)]">·</span>
+                      <span className="truncate">{p.unit_name}</span>
+                    </>
+                  )}
+                </div>
+              }
+              trailing={
+                <span className="bg-[var(--primary-tint)] text-[var(--primary)] text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm border border-[var(--primary)] border-opacity-20">
+                  {ROLE_LABELS[p.role]}
+                </span>
+              }
+            />
           ))
         )}
       </div>

@@ -11,16 +11,18 @@ export function BentoCard({ children, span = 1, className }: BentoCardProps) {
   return (
     <div
       className={cn(
-        "relative rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm overflow-hidden",
-        "transition-[transform,box-shadow,border-color] duration-base ease-ios-out",
-        "hover:-translate-y-px hover:shadow-md hover:border-[var(--border-strong)]",
-        "before:absolute before:top-0 before:left-0 before:right-0 before:h-[3px]",
-        "before:bg-gradient-to-r before:from-[var(--primary)]/70 before:via-[var(--primary)]/30 before:to-transparent",
+        "relative rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-tactile)] overflow-hidden",
+        "transition-all duration-base ease-ios-out",
+        "hover:-translate-y-0.5 hover:shadow-[var(--shadow-premium)] hover:border-[var(--border-strong)]",
+        // Subtle mesh gradient background
+        "before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_top_right,var(--primary-tint),transparent_70%)] before:opacity-40",
+        // Clinical inner glow border
+        "after:absolute after:inset-0 after:rounded-xl after:shadow-[var(--shadow-inner-glow)] after:pointer-events-none",
         span === 2 && "col-span-2",
         className,
       )}
     >
-      {children}
+      <div className="relative z-10">{children}</div>
     </div>
   );
 }

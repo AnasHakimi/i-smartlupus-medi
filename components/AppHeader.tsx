@@ -30,14 +30,16 @@ export function AppHeader({
         <ChevronIcon className="h-4 w-4" aria-hidden />
       </button>
 
-      <button
-        type="button"
-        onClick={onOpenDrawer}
-        aria-label="Buka menu"
-        className="inline-flex md:hidden items-center justify-center w-9 h-9 rounded-md text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] hover:text-[var(--fg)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]"
-      >
-        <Menu className="h-4 w-4" aria-hidden />
-      </button>
+      <div className="flex items-center gap-3 md:hidden">
+        <button
+          type="button"
+          onClick={onOpenDrawer}
+          aria-label="Buka menu"
+          className="inline-flex items-center justify-center w-9 h-9 rounded-md text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] hover:text-[var(--fg)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]"
+        >
+          <Menu className="h-4 w-4" aria-hidden />
+        </button>
+      </div>
 
       <h1 className="text-subhead font-semibold text-[var(--fg)] tracking-tight truncate">
         {pageTitle}

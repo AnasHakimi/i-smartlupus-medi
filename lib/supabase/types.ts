@@ -2,8 +2,11 @@ export type UserRole = "user" | "unit_aset" | "admin";
 
 export type AssetCondition = "rosak" | "usang";
 
+export type AssetCategory = "harta_modal" | "aset_bernilai_rendah";
+
+export type AssetSubCategory = "alat_perubatan" | "bukan_alat_perubatan";
+
 export type TicketStatus =
-  | "BARU"
   | "menunggu_semakan"
   | "proses_pelupusan"
   | "selesai"
@@ -26,6 +29,12 @@ export interface DisposalTicket {
   asset_name: string;
   inventory_id: string | null;
   asset_condition: AssetCondition;
+  category: AssetCategory | null;
+  sub_category: AssetSubCategory | null;
+  serial_no: string | null;
+  asset_type: string | null;
+  purchase_date: string | null;
+  purchase_price: number | null;
   location: string | null;
   status: TicketStatus;
   disposal_method: DisposalMethod | null;

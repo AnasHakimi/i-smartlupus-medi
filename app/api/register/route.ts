@@ -2,17 +2,22 @@ import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { icToEmail, validateIc } from "@/lib/utils";
+import type { UserRole } from "@/lib/supabase/types";
+
+const VALID_ROLES: UserRole[] = ["user", "unit_aset", "admin"];
 
 export async function POST(request: Request) {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!serviceRoleKey) {
+    console.error("Missing SUPABASE_SERVICE_ROLE_KEY");
     return NextResponse.json(
-      { error: "Server configuration error" },
+      { error: "Ralat konfigurasi pelayan." },
       { status: 500 },
     );
   }
 
-  // Verify the caller is an authenticated admin
+  // 1. Verify the caller is an authenticated admin
   const cookieStore = await cookies();
   const supabaseAuth = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -32,7 +37,7 @@ export async function POST(request: Request) {
   } = await supabaseAuth.auth.getUser();
 
   if (!caller) {
-    return NextResponse.json({ error: "Tidak dibenarkan." }, { status: 401 });
+    return NextResponse.json({ error: "Sesi tamat." }, { status: 401 });
   }
 
   const { data: callerProfile } = await supabaseAuth
@@ -43,23 +48,43 @@ export async function POST(request: Request) {
 
   if (!callerProfile || callerProfile.role !== "admin") {
     return NextResponse.json(
-      { error: "Hanya pentadbir boleh mendaftar pengguna." },
+      { error: "Hanya pentadbir boleh mendaftar pengguna baharu." },
       { status: 403 },
     );
   }
 
-  // Validate request body
-  const body = await request.json();
-  const { email, password, full_name, ic_number, role, unit_name } = body;
-
-  if (!email || !password || !full_name || !ic_number || !role) {
-    return NextResponse.json(
-      { error: "Maklumat tidak lengkap." },
-      { status: 400 },
-    );
+  // 2. Validate request body
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Format data tidak sah." }, { status: 400 });
   }
 
-  // Create user via Admin API (no session switch)
+  const { password, full_name, ic_number, role, unit_name } = body;
+
+  // Strict validation
+  if (!password || !full_name || !ic_number || !role) {
+    return NextResponse.json({ error: "Maklumat tidak lengkap." }, { status: 400 });
+  }
+
+  const cleanIc = ic_number.replace(/\D/g, "");
+  if (!validateIc(cleanIc)) {
+    return NextResponse.json({ error: "No. Kad Pengenalan tidak sah (mesti 12 digit)." }, { status: 400 });
+  }
+
+  if (password.length < 6) {
+    return NextResponse.json({ error: "Kata laluan terlalu pendek (min. 6 aksara)." }, { status: 400 });
+  }
+
+  if (!VALID_ROLES.includes(role)) {
+    return NextResponse.json({ error: "Peranan tidak sah." }, { status: 400 });
+  }
+
+  // Derive email server-side from validated IC
+  const email = icToEmail(cleanIc);
+
+  // 3. Create user via Admin API
   const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     serviceRoleKey,
@@ -71,31 +96,44 @@ export async function POST(request: Request) {
       email,
       password,
       email_confirm: true,
+      user_metadata: { full_name: full_name.trim() }
     });
 
   if (authError) {
-    return NextResponse.json({ error: authError.message }, { status: 400 });
+    console.error("Auth creation error:", authError.message);
+    // Handle specific common errors
+    if (authError.message.includes("already registered")) {
+      return NextResponse.json({ error: "No. Kad Pengenalan ini sudah berdaftar." }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Gagal mencipta akaun pengguna." }, { status: 400 });
   }
 
-  if (!authData.user) {
-    return NextResponse.json({ error: "Pendaftaran gagal." }, { status: 400 });
+  const userId = authData.user?.id;
+  if (!userId) {
+    return NextResponse.json({ error: "Pendaftaran gagal secara teknikal." }, { status: 400 });
   }
 
-  // Create profile
+  // 4. Create profile with Atomic Rollback
   const { error: profileError } = await supabaseAdmin.from("profiles").insert({
-    id: authData.user.id,
-    ic_number,
-    full_name,
+    id: userId,
+    ic_number: cleanIc,
+    full_name: full_name.trim(),
     role,
-    unit_name: unit_name || null,
+    unit_name: unit_name?.trim() || null,
   });
 
   if (profileError) {
-    return NextResponse.json(
-      { error: profileError.message },
-      { status: 400 },
-    );
+    console.error("Profile creation error, rolling back auth user:", profileError.message);
+    
+    // ROLLBACK: Delete the Auth user we just created because the profile failed
+    await supabaseAdmin.auth.admin.deleteUser(userId);
+
+    if (profileError.code === "23505") { // Unique constraint
+      return NextResponse.json({ error: "Profil dengan No. KP ini sudah wujud." }, { status: 400 });
+    }
+    
+    return NextResponse.json({ error: "Gagal menyimpan profil pengguna." }, { status: 400 });
   }
 
-  return NextResponse.json({ success: true, userId: authData.user.id });
+  return NextResponse.json({ success: true, userId });
 }
