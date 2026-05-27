@@ -55,20 +55,31 @@ export function MobileDrawer({ open, onOpenChange, role, name, onLogOut }: Mobil
           aria-describedby={undefined}
         >
           {/* Header */}
-          <div className="flex items-center justify-between gap-3 px-6 py-4 border-b border-[var(--border)]">
+          <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[var(--border)]">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-[var(--primary)] text-[var(--on-primary)] font-black text-xs shrink-0">
-                iS
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/jata-negara.png"
+                alt="Jata Negara Malaysia"
+                className="h-10 w-auto shrink-0"
+              />
+              <div className="flex flex-col justify-center min-w-0 leading-tight">
+                <Dialog.Title className="text-[13px] font-semibold text-[var(--fg)] tracking-tight truncate">
+                  i-SMARTLUPUS
+                </Dialog.Title>
+                <span className="text-[10px] text-[var(--fg)] truncate">
+                  Hospital Besut
+                </span>
+                <span className="text-[10px] text-[var(--fg)] truncate">
+                  Terengganu
+                </span>
               </div>
-              <Dialog.Title className="text-subhead font-semibold text-[var(--primary)] tracking-tight truncate">
-                i-SMARTLUPUS
-              </Dialog.Title>
             </div>
             <Dialog.Close asChild>
               <button
                 type="button"
                 aria-label="Tutup"
-                className="-mr-2 p-2 rounded-md text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] transition-colors"
+                className="-mr-2 p-2 rounded-md text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] transition-colors shrink-0"
               >
                 <X className="h-4 w-4" />
               </button>

@@ -46,31 +46,12 @@ export default function Sidebar({ role, name, collapsed, onLogOut }: SidebarProp
   return (
     <aside
       className={cn(
-        "hidden md:flex md:flex-col md:fixed md:inset-y-0 z-40",
+        "hidden md:flex md:flex-col md:fixed md:top-16 md:bottom-0 z-30",
         "bg-[var(--surface)] border-r border-[var(--border)] text-[var(--fg)]",
         "transition-[width] duration-base ease-ios-out",
         collapsed ? "md:w-16" : "md:w-60",
       )}
     >
-      {/* Header */}
-      <div
-        className={cn(
-          "flex items-center border-b border-[var(--border)]",
-          collapsed ? "justify-center py-4" : "gap-2 px-5 py-4",
-        )}
-      >
-        <div className={cn("flex items-center gap-2 min-w-0", collapsed && "justify-center")}>
-          <div className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-[var(--primary)] text-[var(--on-primary)] font-black text-xs flex-shrink-0">
-            iS
-          </div>
-          {!collapsed && (
-            <span className="text-subhead font-semibold text-[var(--primary)] tracking-tight truncate">
-              i-SMARTLUPUS
-            </span>
-          )}
-        </div>
-      </div>
-
       {/* Navigation */}
       <nav aria-label="Menu utama" className={cn("flex-1 overflow-y-auto py-3", collapsed ? "px-2" : "px-3")}>
         <ul className="space-y-1">
