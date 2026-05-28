@@ -181,7 +181,11 @@ export function PemohonDashboard({ profile }: PemohonDashboardProps) {
         subtitle="Permohonan dihantar vs selesai · 30 hari"
         className="animate-in [animation-delay:100ms]"
       >
-        <DualLineChart data={data.workflow} />
+        <DualLineChart
+          data={data.workflow}
+          intakeLabel="Saya hantar"
+          reviewedLabel="Selesai diproses"
+        />
       </Section>
 
       {/* Two-up: status + duration */}

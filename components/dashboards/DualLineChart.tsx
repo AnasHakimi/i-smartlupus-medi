@@ -15,6 +15,10 @@ import type { DailyFlow } from "@/lib/dashboard/unit-aset";
 
 interface DualLineChartProps {
   data: DailyFlow[];
+  /** Legend label for the `intake` line. Default: "Permohonan masuk" (unit_aset perspective). */
+  intakeLabel?: string;
+  /** Legend label for the `reviewed` line. Default: "Disemak oleh saya" (unit_aset perspective). */
+  reviewedLabel?: string;
 }
 
 function formatTickDate(iso: string): string {
@@ -22,7 +26,11 @@ function formatTickDate(iso: string): string {
   return new Intl.DateTimeFormat("ms-MY", { day: "numeric", month: "short" }).format(d);
 }
 
-export function DualLineChart({ data }: DualLineChartProps) {
+export function DualLineChart({
+  data,
+  intakeLabel = "Permohonan masuk",
+  reviewedLabel = "Disemak oleh saya",
+}: DualLineChartProps) {
   const { resolvedTheme } = useTheme();
   const grid = resolvedTheme === "dark" ? "#1f2937" : "#e5e7eb";
   const axis = resolvedTheme === "dark" ? "#9ca3af" : "#6b7280";
@@ -67,7 +75,7 @@ export function DualLineChart({ data }: DualLineChartProps) {
           <Line
             type="monotone"
             dataKey="intake"
-            name="Permohonan masuk"
+            name={intakeLabel}
             stroke={intakeColor}
             strokeWidth={2}
             dot={false}
@@ -76,7 +84,7 @@ export function DualLineChart({ data }: DualLineChartProps) {
           <Line
             type="monotone"
             dataKey="reviewed"
-            name="Disemak oleh saya"
+            name={reviewedLabel}
             stroke={reviewColor}
             strokeWidth={2.5}
             dot={false}
