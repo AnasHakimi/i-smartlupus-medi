@@ -58,25 +58,24 @@ export const NAV_ITEMS: Record<
   UserRole,
   Array<{ href: string; label: string; icon: string }>
 > = {
+  // Note: /profil is intentionally NOT in NAV_ITEMS — it lives in the
+  // ProfileMenu dropdown in AppHeader (top-right) instead of the main nav.
   user: [
     { href: "/dashboard", label: "Utama", icon: "Home" },
     { href: "/status", label: "Status", icon: "ClipboardList" },
     { href: "/mohon", label: "Mohon", icon: "Plus" },
     { href: "/semua", label: "Semua", icon: "LayoutList" },
-    { href: "/profil", label: "Profil", icon: "User" },
   ],
   unit_aset: [
     { href: "/dashboard", label: "Utama", icon: "Home" },
     { href: "/semua", label: "Semua", icon: "LayoutList" },
     { href: "/semakan", label: "Semakan", icon: "ClipboardCheck" },
     { href: "/status", label: "Status", icon: "ClipboardList" },
-    { href: "/profil", label: "Profil", icon: "User" },
   ],
   admin: [
     { href: "/dashboard", label: "Utama", icon: "Home" },
     { href: "/semua", label: "Semua", icon: "LayoutList" },
     { href: "/pengguna", label: "Pengguna", icon: "Users" },
-    { href: "/profil", label: "Profil", icon: "User" },
     { href: "/status", label: "Status", icon: "ClipboardList" },
   ],
 };

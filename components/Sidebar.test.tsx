@@ -12,7 +12,11 @@ describe("Sidebar", () => {
     expect(screen.getByText("Utama")).toBeInTheDocument();
     expect(screen.getByText("Pengguna")).toBeInTheDocument();
     expect(screen.getByText("Semua")).toBeInTheDocument();
-    expect(screen.getByText("Profil")).toBeInTheDocument();
+  });
+
+  it("does not render Profil link (lives in ProfileMenu now)", () => {
+    render(<Sidebar role="admin" collapsed={false} />);
+    expect(screen.queryByText("Profil")).not.toBeInTheDocument();
   });
 
   it("hides labels when collapsed", () => {
