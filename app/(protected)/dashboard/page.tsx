@@ -20,6 +20,7 @@ import { formatDate } from "@/lib/utils";
 import { Inbox } from "lucide-react";
 import { getGreeting } from "@/lib/greeting";
 import { UnitAsetDashboard } from "@/components/dashboards/UnitAsetDashboard";
+import { PemohonDashboard } from "@/components/dashboards/PemohonDashboard";
 
 type Role = Profile["role"];
 
@@ -154,6 +155,9 @@ export default function DashboardPage() {
   if (profile.role === "unit_aset") {
     return <UnitAsetDashboard profile={profile} />;
   }
+  if (profile.role === "user") {
+    return <PemohonDashboard profile={profile} />;
+  }
 
   const palette = chartColors(resolvedTheme);
   const chartData = [
@@ -236,11 +240,7 @@ export default function DashboardPage() {
           <EmptyState
             icon={<Inbox className="h-8 w-8" aria-hidden />}
             title="Belum ada permohonan"
-            description={
-              profile.role === "user"
-                ? "Mohon pelupusan pertama anda untuk mula."
-                : "Tiada tiket setakat ini."
-            }
+            description="Tiada tiket setakat ini."
           />
         ) : (
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden shadow-[var(--shadow-tactile)]">

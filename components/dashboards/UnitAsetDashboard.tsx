@@ -17,6 +17,7 @@ import {
   fetchUnitAsetDashboard,
   type UnitAsetDashboardData,
 } from "@/lib/dashboard/unit-aset";
+import { Section } from "./Section";
 import { KpiCard } from "./KpiCard";
 import { DualLineChart } from "./DualLineChart";
 import { AgeBucketBar } from "./AgeBucketBar";
@@ -36,34 +37,6 @@ function formatTodayMY(d: Date = new Date()): string {
     month: "long",
     year: "numeric",
   }).format(d);
-}
-
-function Section({
-  title,
-  subtitle,
-  children,
-  className = "",
-}: {
-  title: string;
-  subtitle?: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <section
-      className={`rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 md:p-5 ${className}`}
-    >
-      <header className="mb-3">
-        <h3 className="text-subhead font-semibold text-[var(--fg)] tracking-tight">
-          {title}
-        </h3>
-        {subtitle && (
-          <p className="text-caption text-[var(--fg-muted)] mt-0.5">{subtitle}</p>
-        )}
-      </header>
-      {children}
-    </section>
-  );
 }
 
 export function UnitAsetDashboard({ profile }: UnitAsetDashboardProps) {
