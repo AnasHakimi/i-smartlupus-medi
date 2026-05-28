@@ -12,10 +12,9 @@ import {
   Users,
   FilePlus,
   LayoutList,
-  LogOut,
   type LucideIcon,
 } from "lucide-react";
-import { NAV_ITEMS, ROLE_LABELS } from "@/lib/constants";
+import { NAV_ITEMS } from "@/lib/constants";
 import type { UserRole } from "@/lib/supabase/types";
 import { cn } from "@/lib/utils";
 
@@ -33,44 +32,22 @@ const ICON_MAP: Record<string, LucideIcon> = {
 
 interface SidebarProps {
   role: UserRole;
-  name: string;
   collapsed: boolean;
-  onLogOut: () => void;
 }
 
-export default function Sidebar({ role, name, collapsed, onLogOut }: SidebarProps) {
+export default function Sidebar({ role, collapsed }: SidebarProps) {
   const pathname = usePathname();
   const items = NAV_ITEMS[role];
-  const roleLabel = ROLE_LABELS[role];
 
   return (
     <aside
       className={cn(
-        "hidden md:flex md:flex-col md:fixed md:inset-y-0 z-40",
+        "hidden md:flex md:flex-col md:fixed md:top-16 md:bottom-0 z-30",
         "bg-[var(--surface)] border-r border-[var(--border)] text-[var(--fg)]",
         "transition-[width] duration-base ease-ios-out",
         collapsed ? "md:w-16" : "md:w-60",
       )}
     >
-      {/* Header */}
-      <div
-        className={cn(
-          "flex items-center border-b border-[var(--border)]",
-          collapsed ? "justify-center py-4" : "gap-2 px-5 py-4",
-        )}
-      >
-        <div className={cn("flex items-center gap-2 min-w-0", collapsed && "justify-center")}>
-          <div className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-[var(--primary)] text-[var(--on-primary)] font-black text-xs flex-shrink-0">
-            iS
-          </div>
-          {!collapsed && (
-            <span className="text-subhead font-semibold text-[var(--primary)] tracking-tight truncate">
-              i-SMARTLUPUS
-            </span>
-          )}
-        </div>
-      </div>
-
       {/* Navigation */}
       <nav aria-label="Menu utama" className={cn("flex-1 overflow-y-auto py-3", collapsed ? "px-2" : "px-3")}>
         <ul className="space-y-1">
@@ -103,23 +80,6 @@ export default function Sidebar({ role, name, collapsed, onLogOut }: SidebarProp
         </ul>
       </nav>
 
-      {/* Footer (User Details + Logout) */}
-      {!collapsed && (
-        <div className="mt-auto border-t border-[var(--border)] p-4 space-y-3">
-          <div className="min-w-0">
-            <p className="text-subhead font-bold text-[var(--fg)] truncate">{name}</p>
-            <p className="text-caption font-medium text-[var(--fg-muted)]">{roleLabel}</p>
-          </div>
-          <button
-            type="button"
-            onClick={onLogOut}
-            className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-md text-subhead font-semibold text-[var(--destructive)] hover:bg-[var(--destructive-tint)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--destructive)]"
-          >
-            <LogOut className="h-4 w-4 shrink-0" />
-            <span>Log Keluar</span>
-          </button>
-        </div>
-      )}
     </aside>
   );
 }

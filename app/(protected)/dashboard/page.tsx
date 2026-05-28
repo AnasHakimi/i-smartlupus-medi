@@ -7,28 +7,22 @@ import { createClient } from "@/lib/supabase/client";
 import type { DisposalTicket, Profile, TicketStatus } from "@/lib/supabase/types";
 import { ROLE_LABELS } from "@/lib/constants";
 import { DashboardSkeleton } from "@/components/Skeleton";
-import { Avatar } from "@/components/ui/avatar";
 import { Chip } from "@/components/ui/chip";
 import { BentoCard } from "@/components/ui/bento-card";
 import { Stat } from "@/components/ui/stat";
-import { ClipboardList, Clock, RefreshCw, CheckCircle2, Plus } from "lucide-react";
+import { ClipboardList, Clock, RefreshCw, CheckCircle2 } from "lucide-react";
 import StatusChart from "@/components/StatusChart";
 import { useTheme } from "@/components/theme-provider";
 import { ListItem } from "@/components/ui/list-item";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusChip } from "@/components/StatusChip";
-import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 import { Inbox } from "lucide-react";
 import { getGreeting } from "@/lib/greeting";
+import { UnitAsetDashboard } from "@/components/dashboards/UnitAsetDashboard";
+import { PemohonDashboard } from "@/components/dashboards/PemohonDashboard";
 
 type Role = Profile["role"];
-
-function avatarRole(role: Role): "pemohon" | "penyemak" | "pentadbir" {
-  if (role === "user") return "pemohon";
-  if (role === "unit_aset") return "penyemak";
-  return "pentadbir";
-}
 
 function formatTodayMY(d: Date = new Date()): string {
   // 18 Apr 2026 style — Intl with ms-MY locale
@@ -115,6 +109,9 @@ export default function DashboardPage() {
       if (!prof) return;
       setProfile(prof as Profile);
 
+      // Unit_aset has its own analyst dashboard that does its own fetching
+      if (prof.role === "unit_aset") return;
+
       // Counts
       const statusQuery = supabase.from("disposal_tickets").select("status");
       const { data: statusRows } = prof.role === "user"
@@ -152,6 +149,14 @@ export default function DashboardPage() {
         <span className="sr-only">Memuatkan papan pemuka...</span>
       </div>
     );
+  }
+
+  // Role-aware dashboard routing
+  if (profile.role === "unit_aset") {
+    return <UnitAsetDashboard profile={profile} />;
+  }
+  if (profile.role === "user") {
+    return <PemohonDashboard profile={profile} />;
   }
 
   const palette = chartColors(resolvedTheme);
@@ -235,11 +240,7 @@ export default function DashboardPage() {
           <EmptyState
             icon={<Inbox className="h-8 w-8" aria-hidden />}
             title="Belum ada permohonan"
-            description={
-              profile.role === "user"
-                ? "Mohon pelupusan pertama anda untuk mula."
-                : "Tiada tiket setakat ini."
-            }
+            description="Tiada tiket setakat ini."
           />
         ) : (
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden shadow-[var(--shadow-tactile)]">

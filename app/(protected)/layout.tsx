@@ -8,7 +8,8 @@ import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import { AppHeader } from "@/components/AppHeader";
 import { MobileDrawer } from "@/components/MobileDrawer";
-import { getPageTitle } from "@/lib/page-title";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { getBreadcrumbs } from "@/lib/breadcrumbs";
 import { cn } from "@/lib/utils";
 
 const COLLAPSE_KEY = "sidebar-collapsed";
@@ -84,38 +85,43 @@ export default function ProtectedLayout({
 
   if (!profile) return null;
 
-  const pageTitle = getPageTitle(pathname);
+  const breadcrumbs = getBreadcrumbs(pathname);
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--fg)]">
+      <AppHeader
+        sidebarCollapsed={collapsed}
+        onToggleSidebar={toggleCollapsed}
+        onOpenDrawer={() => setDrawerOpen(true)}
+        name={profile.full_name}
+        role={profile.role}
+        onLogOut={handleLogOut}
+      />
       <Sidebar
         role={profile.role}
-        name={profile.full_name}
         collapsed={collapsed}
-        onLogOut={handleLogOut}
       />
       <main
         className={cn(
-          "transition-[margin-left] duration-base ease-ios-out",
+          "transition-[margin-left] duration-base ease-ios-out pt-16",
           collapsed ? "md:ml-16" : "md:ml-60",
           "pb-20 md:pb-0",
         )}
       >
-        <AppHeader
-          pageTitle={pageTitle}
-          sidebarCollapsed={collapsed}
-          onToggleSidebar={toggleCollapsed}
-          onOpenDrawer={() => setDrawerOpen(true)}
-        />
-        <div className="max-w-5xl mx-auto px-4 py-6">{children}</div>
+        <div className="max-w-screen-2xl mx-auto px-4 py-6">
+          {breadcrumbs.length > 1 && (
+            <div className="mb-4 md:mb-5">
+              <Breadcrumbs segments={breadcrumbs} />
+            </div>
+          )}
+          {children}
+        </div>
       </main>
       <BottomNav role={profile.role} />
       <MobileDrawer
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
         role={profile.role}
-        name={profile.full_name}
-        onLogOut={handleLogOut}
       />
     </div>
   );

@@ -12,10 +12,12 @@ function renderHeader(props: Partial<React.ComponentProps<typeof AppHeader>> = {
   return render(
     <ThemeProvider>
       <AppHeader
-        pageTitle="Papan Pemuka"
         sidebarCollapsed={false}
         onToggleSidebar={() => {}}
         onOpenDrawer={() => {}}
+        name="Anas Hakimi"
+        role="admin"
+        onLogOut={() => {}}
         {...props}
       />
     </ThemeProvider>
@@ -28,9 +30,16 @@ describe("AppHeader", () => {
     document.documentElement.classList.remove("dark");
   });
 
-  it("renders the page title", () => {
-    renderHeader({ pageTitle: "Papan Pemuka" });
-    expect(screen.getByRole("heading", { level: 1, name: "Papan Pemuka" })).toBeInTheDocument();
+  it("renders the Jata Negara logo with descriptive alt text", () => {
+    renderHeader();
+    expect(screen.getByAltText("Jata Negara Malaysia")).toBeInTheDocument();
+  });
+
+  it("renders the three kepala surat lines", () => {
+    renderHeader();
+    expect(screen.getByText("i-SMARTLUPUS")).toBeInTheDocument();
+    expect(screen.getByText("Hospital Besut")).toBeInTheDocument();
+    expect(screen.getByText("Terengganu")).toBeInTheDocument();
   });
 
   it("renders ThemeToggle", () => {
@@ -66,5 +75,10 @@ describe("AppHeader", () => {
     renderHeader({ onOpenDrawer });
     fireEvent.click(screen.getByLabelText("Buka menu"));
     expect(onOpenDrawer).toHaveBeenCalledOnce();
+  });
+
+  it("renders ProfileMenu trigger with the user's name", () => {
+    renderHeader({ name: "Anas Hakimi" });
+    expect(screen.getByLabelText(/Menu profil Anas Hakimi/i)).toBeInTheDocument();
   });
 });

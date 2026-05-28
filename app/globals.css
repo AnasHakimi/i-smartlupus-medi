@@ -41,6 +41,35 @@
     --shadow-tactile: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 3px 1px rgba(0, 0, 0, 0.03);
     --shadow-inner-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
     --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+    /* Dashboard dimensional palettes (light mode = 500-level marks, 50-level tints) */
+    /* Category dimension */
+    --dim-category-modal: #6366F1;       /* indigo-500 */
+    --dim-category-rendah: #14B8A6;      /* teal-500 */
+    /* Condition dimension */
+    --dim-condition-rosak: #F43F5E;      /* rose-500 */
+    --dim-condition-usang: #F59E0B;      /* amber-500 */
+    /* Disposal method */
+    --dim-method-jualan: #10B981;        /* emerald-500 */
+    --dim-method-lelong: #0EA5E9;        /* sky-500 */
+    --dim-method-musnah: #EF4444;        /* red-500 */
+    --dim-method-serah: #8B5CF6;         /* violet-500 */
+    /* Severity for age buckets */
+    --dim-severity-fresh: #10B981;       /* emerald-500 */
+    --dim-severity-warm: #F59E0B;        /* amber-500 */
+    --dim-severity-aging: #F97316;       /* orange-500 */
+    --dim-severity-critical: #F43F5E;    /* rose-500 */
+    /* KPI card tints (soft backgrounds + saturated foregrounds) */
+    --kpi-emerald-bg: #ECFDF5;
+    --kpi-emerald-fg: #047857;
+    --kpi-amber-bg: #FFFBEB;
+    --kpi-amber-fg: #B45309;
+    --kpi-sky-bg: #F0F9FF;
+    --kpi-sky-fg: #0369A1;
+    --kpi-rose-bg: #FFF1F2;
+    --kpi-rose-fg: #BE123C;
+    --kpi-violet-bg: #F5F3FF;
+    --kpi-violet-fg: #6D28D9;
   }
 
   .dark {
@@ -80,6 +109,30 @@
     --shadow-tactile: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.2);
     --shadow-inner-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
     --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+
+    /* Dashboard dimensional palettes (dark mode = 400-level marks, deep tints) */
+    --dim-category-modal: #818CF8;       /* indigo-400 */
+    --dim-category-rendah: #2DD4BF;      /* teal-400 */
+    --dim-condition-rosak: #FB7185;      /* rose-400 */
+    --dim-condition-usang: #FBBF24;      /* amber-400 */
+    --dim-method-jualan: #34D399;        /* emerald-400 */
+    --dim-method-lelong: #38BDF8;        /* sky-400 */
+    --dim-method-musnah: #F87171;        /* red-400 */
+    --dim-method-serah: #A78BFA;         /* violet-400 */
+    --dim-severity-fresh: #34D399;       /* emerald-400 */
+    --dim-severity-warm: #FBBF24;        /* amber-400 */
+    --dim-severity-aging: #FB923C;       /* orange-400 */
+    --dim-severity-critical: #FB7185;    /* rose-400 */
+    --kpi-emerald-bg: rgba(16, 185, 129, 0.10);
+    --kpi-emerald-fg: #6EE7B7;
+    --kpi-amber-bg: rgba(245, 158, 11, 0.10);
+    --kpi-amber-fg: #FCD34D;
+    --kpi-sky-bg: rgba(14, 165, 233, 0.10);
+    --kpi-sky-fg: #7DD3FC;
+    --kpi-rose-bg: rgba(244, 63, 94, 0.10);
+    --kpi-rose-fg: #FDA4AF;
+    --kpi-violet-bg: rgba(139, 92, 246, 0.10);
+    --kpi-violet-fg: #C4B5FD;
   }
 
   html {
