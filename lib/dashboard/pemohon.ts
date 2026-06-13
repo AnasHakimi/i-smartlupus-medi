@@ -25,7 +25,7 @@ import {
 export interface AttentionRow {
   id: string;
   ticket_no: string;
-  asset_name: string;
+  asset_name: string; // display alias, populated from disposal_tickets.asset_type
   reason: "ditolak" | "menunggu_lama";
   age_days: number;
   rejection_reason: string | null;
@@ -52,6 +52,7 @@ export interface PemohonDashboardData {
 
 // ─── Pure helpers (testable in isolation) ──────────────────────────────
 
+// NOTE: the `asset_name` field on these rows is a display alias populated from asset_type (the DB column asset_name was removed in migration 005).
 /**
  * Picks up to 5 attention rows for the dashboard.
  * Ditolak rows are prioritized (most recent first, by input order), then
