@@ -145,20 +145,20 @@ export async function fetchPemohonDashboard(
     supabase
       .from("disposal_tickets")
       .select(
-        "id, ticket_no, asset_name, category, asset_condition, status, rejection_reason, created_at, reviewed_at, completed_at",
+        "id, ticket_no, asset_type, category, asset_condition, status, rejection_reason, created_at, reviewed_at, completed_at",
       )
       .eq("created_by", userId)
       .gte("created_at", since60d),
     supabase
       .from("disposal_tickets")
-      .select("id, ticket_no, asset_name, status, created_at")
+      .select("id, ticket_no, asset_type, status, created_at")
       .eq("created_by", userId)
       .in("status", ["menunggu_semakan", "proses_pelupusan"] as TicketStatus[])
       .order("created_at", { ascending: true }),
     supabase
       .from("disposal_tickets")
       .select(
-        "id, ticket_no, asset_name, status, created_at, reviewed_at, rejection_reason",
+        "id, ticket_no, asset_type, status, created_at, reviewed_at, rejection_reason",
       )
       .eq("created_by", userId)
       .eq("status", "ditolak" as TicketStatus)
@@ -169,7 +169,7 @@ export async function fetchPemohonDashboard(
   const allTickets60d = (allTickets60dRaw ?? []) as Array<{
     id: string;
     ticket_no: string;
-    asset_name: string;
+    asset_type: string;
     category: AssetCategory | null;
     asset_condition: AssetCondition;
     status: TicketStatus;
@@ -181,14 +181,14 @@ export async function fetchPemohonDashboard(
   const activeSnapshot = (activeSnapshotRaw ?? []) as Array<{
     id: string;
     ticket_no: string;
-    asset_name: string;
+    asset_type: string;
     status: TicketStatus;
     created_at: string;
   }>;
   const recentRejections = (recentRejectionsRaw ?? []) as Array<{
     id: string;
     ticket_no: string;
-    asset_name: string;
+    asset_type: string;
     status: TicketStatus;
     created_at: string;
     reviewed_at: string | null;
@@ -327,14 +327,14 @@ export async function fetchPemohonDashboard(
     recentRejections.map((r) => ({
       id: r.id,
       ticket_no: r.ticket_no,
-      asset_name: r.asset_name,
+      asset_name: r.asset_type,
       created_at: r.created_at,
       rejection_reason: r.rejection_reason,
     })),
     activeSnapshot.map((t) => ({
       id: t.id,
       ticket_no: t.ticket_no,
-      asset_name: t.asset_name,
+      asset_name: t.asset_type,
       created_at: t.created_at,
     })),
     now,

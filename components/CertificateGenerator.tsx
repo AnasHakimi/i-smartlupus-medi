@@ -38,7 +38,6 @@ function generateCertPdf(ticket: DisposalTicket, officerName: string): Blob {
 
   const ticketNo =
     (row.ticket_no as string | undefined) ?? ticket.ticket_no ?? ticket.id;
-  const inventoryId = (row.inventory_id as string | undefined) ?? "-";
   const location = (row.location as string | undefined) ?? "-";
   const completedAt =
     (row.completed_at as string | undefined) ?? (row.updated_at as string | undefined) ?? null;
@@ -70,12 +69,10 @@ function generateCertPdf(ticket: DisposalTicket, officerName: string): Blob {
 
   // Details table
   const details: Array<[string, string]> = [
-    ["Nama Aset", ticket.asset_name ?? "-"],
-    ["Jenis Aset", ticket.asset_type ?? "-"],
+    ["Jenis Aset", ticket.asset_type],
     ["Kategori", categoryLabel],
     ["Sub-Kategori", subCategoryLabel],
     ["No. Siri Pendaftaran", ticket.serial_no ?? "-"],
-    ["No. Inventori", inventoryId],
     ["Tarikh Perolehan", formatDate(ticket.purchase_date)],
     ["Harga Perolehan", ticket.purchase_price ? formatCurrency(ticket.purchase_price) : "-"],
     ["Keadaan", conditionLabel],

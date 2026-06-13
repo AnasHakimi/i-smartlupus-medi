@@ -155,7 +155,7 @@ export default function SemakanPage() {
               {/* Asset Info */}
               <div className="space-y-1">
                 <p className="text-title-3 font-semibold text-[var(--fg)]">
-                  {ticket.asset_name}
+                  {ticket.asset_type}
                 </p>
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-footnote text-[var(--fg-muted)]">
                   <span className="flex items-center gap-1">

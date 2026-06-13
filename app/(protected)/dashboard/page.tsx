@@ -258,7 +258,7 @@ export default function DashboardPage() {
                 }
                 subtitle={
                   <span className="flex items-center gap-1.5">
-                    <span className="truncate">{t.asset_name}</span>
+                    <span className="truncate">{t.asset_type}</span>
                     <span aria-hidden className="text-[var(--border-strong)]">·</span>
                     <span>{formatDate(t.created_at)}</span>
                   </span>

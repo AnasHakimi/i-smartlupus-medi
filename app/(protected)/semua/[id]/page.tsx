@@ -184,12 +184,8 @@ export default function TicketDetailPage() {
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-6">
           <div className="space-y-1">
-            <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Nama Aset</p>
-            <p className="text-body font-medium text-[var(--fg)] leading-tight">{ticket.asset_name}</p>
-          </div>
-          <div className="space-y-1">
             <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Jenis Aset</p>
-            <p className="text-body font-medium text-[var(--fg)] leading-tight">{ticket.asset_type || "-"}</p>
+            <p className="text-body font-medium text-[var(--fg)] leading-tight">{ticket.asset_type}</p>
           </div>
           <div className="space-y-1">
             <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Kategori</p>
@@ -206,10 +202,6 @@ export default function TicketDetailPage() {
           <div className="space-y-1">
             <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">No. Siri Pendaftaran</p>
             <p className="text-body font-medium text-[var(--fg)] tabular-nums leading-tight">{ticket.serial_no || "-"}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">No. Inventori</p>
-            <p className="text-body font-medium text-[var(--fg)] tabular-nums leading-tight">{ticket.inventory_id || "-"}</p>
           </div>
           <div className="space-y-1">
             <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Tarikh Perolehan</p>
