@@ -14,6 +14,18 @@ UPDATE public.disposal_tickets
 SET asset_type = asset_name
 WHERE asset_type IS NULL OR BTRIM(asset_type) = '';
 
+-- Preflight: fail clearly if any row still lacks an asset identity
+-- (instead of a cryptic SET NOT NULL failure).
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM public.disposal_tickets
+        WHERE NULLIF(BTRIM(asset_type), '') IS NULL
+    ) THEN
+        RAISE EXCEPTION 'Cannot migrate: rows found with no asset identity (asset_type empty after backfill)';
+    END IF;
+END $$;
+
 ALTER TABLE public.disposal_tickets
     ALTER COLUMN asset_type SET NOT NULL;
 
