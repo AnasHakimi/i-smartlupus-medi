@@ -262,13 +262,13 @@ export default function TicketDetailPage() {
               <Camera size={14} className="text-[var(--primary)]" />
               <p className="text-caption font-bold uppercase tracking-wider text-[var(--fg-muted)]">Foto Aset (Untuk Dilupuskan)</p>
             </div>
-            <a href={assetPhotoUrl ?? undefined} target="_blank" rel="noopener noreferrer"
+            <a href={assetPhotoUrl} target="_blank" rel="noopener noreferrer"
                className="relative block w-full aspect-[4/3] rounded-md overflow-hidden border border-[var(--border)] bg-[var(--bg)]">
               <Image src={assetPhotoUrl!} alt="Foto aset" fill className="object-cover" unoptimized />
             </a>
-            <a href={assetPhotoUrl ?? undefined} target="_blank" rel="noopener noreferrer" className="block">
+            <a href={assetPhotoUrl} target="_blank" rel="noopener noreferrer" className="block">
               <Button variant="secondary" className="w-full gap-2 text-[var(--primary)]">
-                <Camera size={16} /> Muat Turun Foto
+                <Camera size={18} /> Muat Turun Foto
               </Button>
             </a>
             {ticket.status !== 'selesai' && (
@@ -295,7 +295,7 @@ export default function TicketDetailPage() {
             {borangUrl ? (
               <a href={borangUrl} target="_blank" rel="noopener noreferrer" className="block">
                 <Button variant="secondary" className="w-full gap-2 text-[var(--primary)]">
-                  <FileText size={16} /> Muat Turun Borang CA
+                  <FileText size={18} /> Muat Turun Borang CA
                 </Button>
               </a>
             ) : ticket.status !== "selesai" ? (
