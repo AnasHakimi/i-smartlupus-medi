@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Send, AlertCircle, Camera } from "lucide-react";
+import { Send, AlertCircle, Camera, FileText } from "lucide-react";
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
@@ -16,14 +16,13 @@ export default function MohonPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  const [assetName, setAssetName] = useState("");
   const [category, setCategory] = useState<AssetCategory>("harta_modal");
   const [subCategory, setSubCategory] = useState<AssetSubCategory>("alat_perubatan");
   const [serialNo, setSerialNo] = useState("");
   const [assetType, setAssetType] = useState("");
+  const [radicareAssetNo, setRadicareAssetNo] = useState("");
   const [purchaseDate, setPurchaseDate] = useState("");
   const [purchasePrice, setPurchasePrice] = useState("");
-  const [inventoryId, setInventoryId] = useState("");
   const [assetCondition, setAssetCondition] = useState<AssetCondition>("rosak");
   const [location, setLocation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -31,8 +30,8 @@ export default function MohonPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!assetName.trim()) {
-      toast.error("Sila masukkan nama aset.");
+    if (!assetType.trim()) {
+      toast.error("Sila masukkan jenis/jenama/model aset.");
       return;
     }
 
@@ -52,14 +51,13 @@ export default function MohonPage() {
       const { data: ticket, error: insertError } = await supabase.rpc(
         "submit_disposal_ticket",
         {
-          p_asset_name: assetName.trim(),
           p_asset_condition: assetCondition,
-          p_inventory_id: inventoryId.trim() || null,
           p_location: location.trim() || null,
           p_category: category,
           p_sub_category: subCategory,
           p_serial_no: serialNo.trim() || null,
-          p_asset_type: assetType.trim() || null,
+          p_asset_type: assetType.trim(),
+          p_radicare_asset_no: radicareAssetNo.trim() || null,
           p_purchase_date: purchaseDate || null,
           p_purchase_price: purchasePrice ? parseFloat(purchasePrice) : null,
         },
@@ -158,6 +156,17 @@ export default function MohonPage() {
               </div>
             </div>
 
+            {subCategory === "alat_perubatan" && (
+              <div className="rounded-md border border-[var(--primary)] bg-[var(--primary-tint)] p-4 space-y-1">
+                <p className="text-subhead font-semibold text-[var(--primary)] flex items-center gap-2">
+                  <FileText size={16} /> Borang CA (Laporan Kerosakan Aset)
+                </p>
+                <p className="text-footnote text-[var(--fg-muted)]">
+                  Wajib dimuat naik selepas permohonan dihantar, di halaman butiran tiket.
+                </p>
+              </div>
+            )}
+
             {/* No. Siri Pendaftaran */}
             <Input
               label="No. Siri Pendaftaran"
@@ -167,52 +176,42 @@ export default function MohonPage() {
               placeholder="Cth: KKM/HOSP/2024/001"
             />
 
-            {/* Jenis Aset */}
+            {/* Jenis/Jenama/Model Aset */}
             <Input
-              label="Jenis Aset"
+              label="Jenis/Jenama/Model Aset"
               required
               value={assetType}
               onChange={(e) => setAssetType(e.target.value)}
-              placeholder="Cth: Kerusi, Ventilator"
+              placeholder="Cth: Ventilator Dräger Evita V300"
             />
 
-            {/* Nama Aset */}
+            {/* No. Aset Radicare */}
             <Input
-              label="Nama Aset"
-              required
-              value={assetName}
-              onChange={(e) => setAssetName(e.target.value)}
-              placeholder="Cth: Kerusi Roda Pesakit"
+              label="No. Aset Radicare"
+              value={radicareAssetNo}
+              onChange={(e) => setRadicareAssetNo(e.target.value)}
+              placeholder="Cth: RAD-2024-00123"
+              helper="Biarkan kosong jika tiada no. aset Radicare."
             />
 
-            {/* Tarikh Perolehan */}
+            {/* Tarikh Perolehan / Tarikh Diterima */}
             <Input
-              label="Tarikh Perolehan"
+              label="Tarikh Perolehan / Tarikh Diterima"
               required
               type="date"
               value={purchaseDate}
               onChange={(e) => setPurchaseDate(e.target.value)}
             />
 
-            {/* Harga Perolehan */}
+            {/* Harga Perolehan Asal (RM) */}
             <Input
-              label="Harga Perolehan"
+              label="Harga Perolehan Asal (RM)"
               required
               type="number"
               step="0.01"
               value={purchasePrice}
               onChange={(e) => setPurchasePrice(e.target.value)}
               placeholder="0.00"
-              trailing={<span className="text-footnote font-bold text-[var(--fg-muted)] pr-4">RM</span>}
-            />
-
-            {/* No. Inventori */}
-            <Input
-              label="No. Inventori"
-              value={inventoryId}
-              onChange={(e) => setInventoryId(e.target.value)}
-              placeholder="Cth: INV-2024-001"
-              helper="Biarkan kosong jika tiada no. inventori."
             />
 
             {/* Keadaan Aset */}
@@ -258,7 +257,7 @@ export default function MohonPage() {
             <div className="space-y-2">
               <span className="text-subhead font-medium text-[var(--fg)] flex items-center gap-2">
                 <Camera size={16} className="text-[var(--primary)]" />
-                Foto Aset
+                Foto Aset (Untuk Dilupuskan)
               </span>
               <p className="text-footnote text-[var(--fg-muted)] mb-4">
                 Sila ambil gambar aset sebagai bukti keadaan semasa. Anda boleh memuat naik foto selepas menghantar permohonan di halaman butiran tiket.
