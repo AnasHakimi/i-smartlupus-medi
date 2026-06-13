@@ -208,6 +208,10 @@ export default function TicketDetailPage() {
             <p className="text-body font-medium text-[var(--fg)] tabular-nums leading-tight">{ticket.serial_no || "-"}</p>
           </div>
           <div className="space-y-1">
+            <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">No. Aset Radicare</p>
+            <p className="text-body font-medium text-[var(--fg)] leading-tight">{ticket.radicare_asset_no || "-"}</p>
+          </div>
+          <div className="space-y-1">
             <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Tarikh Perolehan</p>
             <p className="text-body font-medium text-[var(--fg)] tabular-nums leading-tight">{formatDate(ticket.purchase_date)}</p>
           </div>
