@@ -153,12 +153,12 @@ export default function PenggunaPage() {
         </div>
         <Button
           onClick={() => setShowForm((prev) => !prev)}
-          variant={showForm ? "secondary" : "primary"}
-          className={showForm ? "shrink-0 h-9 w-9 p-0" : "shrink-0 gap-2"}
+          variant={showForm ? "ghost" : "primary"}
+          className={showForm ? "shrink-0 h-12 w-12 p-0 text-[var(--fg)]" : "shrink-0 gap-2"}
           aria-label={showForm ? "Tutup borang" : undefined}
         >
           {showForm ? (
-            <X size={16} />
+            <X size={32} strokeWidth={2.5} />
           ) : (
             <>
               <UserPlus size={16} />
