@@ -1,20 +1,7 @@
-import { IC_DOMAIN } from "./constants";
-
-export function icToEmail(ic: string): string {
-  return `${ic}${IC_DOMAIN}`;
-}
-
-export function emailToIc(email: string): string {
-  return email.replace(IC_DOMAIN, "");
-}
-
-export function validateIc(ic: string): boolean {
-  return /^\d{12}$/.test(ic);
-}
-
-export function formatIc(ic: string): string {
-  if (ic.length !== 12) return ic;
-  return `${ic.slice(0, 6)}-${ic.slice(6, 8)}-${ic.slice(8)}`;
+// ponytail: minimal email shape check — has one @, non-empty local + domain with a dot.
+// Supabase's createUser is the real validator; this just blocks obvious typos client/server-side.
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
 export function formatDate(date: string | Date): string {

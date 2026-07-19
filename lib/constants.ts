@@ -79,5 +79,3 @@ export const NAV_ITEMS: Record<
     { href: "/status", label: "Status", icon: "ClipboardList" },
   ],
 };
-
-export const IC_DOMAIN = "@ic.local";

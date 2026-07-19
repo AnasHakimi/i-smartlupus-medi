@@ -16,7 +16,7 @@ export type DisposalMethod = "jualan" | "lelong" | "musnah" | "serah_agensi";
 
 export interface Profile {
   id: string;
-  ic_number: string;
+  email: string;
   full_name: string;
   role: UserRole;
   unit_name: string | null;

@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Users, UserPlus, Shield, Building, CreditCard, ChevronUp } from "lucide-react";
+import { Users, UserPlus, Shield, Building, Mail, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile, UserRole } from "@/lib/supabase/types";
 import { ROLE_LABELS } from "@/lib/constants";
-import { icToEmail, validateIc, formatIc, cn } from "@/lib/utils";
+import { isValidEmail, cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ListItem } from "@/components/ui/list-item";
@@ -54,7 +54,7 @@ export default function PenggunaPage() {
   const [submitting, setSubmitting] = useState(false);
 
   // Form state
-  const [icNumber, setIcNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState<UserRole>("user");
   const [unitName, setUnitName] = useState("");
@@ -78,7 +78,7 @@ export default function PenggunaPage() {
   }, []);
 
   function resetForm() {
-    setIcNumber("");
+    setEmail("");
     setFullName("");
     setRole("user");
     setUnitName("");
@@ -88,10 +88,10 @@ export default function PenggunaPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const cleanIc = icNumber.replace(/\D/g, "");
+    const cleanEmail = email.trim().toLowerCase();
 
-    if (!validateIc(cleanIc)) {
-      toast.error("No. Kad Pengenalan mesti 12 digit angka.");
+    if (!isValidEmail(cleanEmail)) {
+      toast.error("Sila masukkan alamat e-mel yang sah.");
       return;
     }
     if (!fullName.trim()) {
@@ -110,9 +110,8 @@ export default function PenggunaPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: icToEmail(cleanIc),
+          email: cleanEmail,
           password,
-          ic_number: cleanIc,
           full_name: fullName.trim(),
           role,
           unit_name: unitName.trim() || null,
@@ -174,17 +173,16 @@ export default function PenggunaPage() {
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* IC Number */}
+              {/* Email */}
               <Input
-                label="No. Kad Pengenalan"
+                label="E-mel"
                 required
-                type="text"
-                inputMode="numeric"
-                maxLength={12}
-                value={icNumber}
-                onChange={(e) => setIcNumber(e.target.value.replace(/\D/g, "").slice(0, 12))}
-                placeholder="cth. 901231071234"
-                trailing={<CreditCard size={16} className="text-[var(--fg-muted)]" />}
+                type="email"
+                inputMode="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="cth. nama@hospital.gov.my"
+                trailing={<Mail size={16} className="text-[var(--fg-muted)]" />}
               />
 
               {/* Full Name */}
@@ -295,8 +293,8 @@ export default function PenggunaPage() {
                 </div>
               }
               subtitle={
-                <div className="flex items-center gap-1.5 tabular-nums">
-                  <span>{formatIc(p.ic_number)}</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="truncate">{p.email}</span>
                   {p.unit_name && (
                     <>
                       <span aria-hidden className="text-[var(--border-strong)]">·</span>

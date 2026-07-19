@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { icToEmail, validateIc } from "@/lib/utils";
+import { isValidEmail } from "@/lib/utils";
 import type { UserRole } from "@/lib/supabase/types";
 
 const VALID_ROLES: UserRole[] = ["user", "unit_aset", "admin"];
@@ -61,16 +61,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Format data tidak sah." }, { status: 400 });
   }
 
-  const { password, full_name, ic_number, role, unit_name } = body;
+  const { email: rawEmail, password, full_name, role, unit_name } = body;
 
   // Strict validation
-  if (!password || !full_name || !ic_number || !role) {
+  if (!rawEmail || !password || !full_name || !role) {
     return NextResponse.json({ error: "Maklumat tidak lengkap." }, { status: 400 });
   }
 
-  const cleanIc = ic_number.replace(/\D/g, "");
-  if (!validateIc(cleanIc)) {
-    return NextResponse.json({ error: "No. Kad Pengenalan tidak sah (mesti 12 digit)." }, { status: 400 });
+  const email = String(rawEmail).trim().toLowerCase();
+  if (!isValidEmail(email)) {
+    return NextResponse.json({ error: "Alamat e-mel tidak sah." }, { status: 400 });
   }
 
   if (password.length < 6) {
@@ -80,9 +80,6 @@ export async function POST(request: Request) {
   if (!VALID_ROLES.includes(role)) {
     return NextResponse.json({ error: "Peranan tidak sah." }, { status: 400 });
   }
-
-  // Derive email server-side from validated IC
-  const email = icToEmail(cleanIc);
 
   // 3. Create user via Admin API
   const supabaseAdmin = createClient(
@@ -103,7 +100,7 @@ export async function POST(request: Request) {
     console.error("Auth creation error:", authError.message);
     // Handle specific common errors
     if (authError.message.includes("already registered")) {
-      return NextResponse.json({ error: "No. Kad Pengenalan ini sudah berdaftar." }, { status: 400 });
+      return NextResponse.json({ error: "E-mel ini sudah berdaftar." }, { status: 400 });
     }
     return NextResponse.json({ error: "Gagal mencipta akaun pengguna." }, { status: 400 });
   }
@@ -116,7 +113,7 @@ export async function POST(request: Request) {
   // 4. Create profile with Atomic Rollback
   const { error: profileError } = await supabaseAdmin.from("profiles").insert({
     id: userId,
-    ic_number: cleanIc,
+    email,
     full_name: full_name.trim(),
     role,
     unit_name: unit_name?.trim() || null,
@@ -129,7 +126,7 @@ export async function POST(request: Request) {
     await supabaseAdmin.auth.admin.deleteUser(userId);
 
     if (profileError.code === "23505") { // Unique constraint
-      return NextResponse.json({ error: "Profil dengan No. KP ini sudah wujud." }, { status: 400 });
+      return NextResponse.json({ error: "Profil dengan e-mel ini sudah wujud." }, { status: 400 });
     }
     
     return NextResponse.json({ error: "Gagal menyimpan profil pengguna." }, { status: 400 });
