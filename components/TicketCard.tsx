@@ -31,7 +31,7 @@ export default function TicketCard({ ticket }: TicketCardProps) {
       }
       subtitle={
         <div className="flex items-center gap-1.5 mt-0.5">
-          <span className="truncate">{ticket.asset_name}</span>
+          <span className="truncate">{ticket.asset_type}</span>
           <span aria-hidden className="text-[var(--border-strong)]">·</span>
           <span className="shrink-0">{formatDate(ticket.created_at)}</span>
         </div>

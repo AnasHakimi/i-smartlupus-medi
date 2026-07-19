@@ -115,7 +115,7 @@ export async function fetchUnitAsetDashboard(
       .gte("created_at", since30d),
     supabase
       .from("disposal_tickets")
-      .select("id, ticket_no, asset_name, category, created_at, created_by")
+      .select("id, ticket_no, asset_type, category, created_at, created_by")
       .eq("status", "menunggu_semakan" as TicketStatus)
       .order("created_at", { ascending: true })
       .limit(5),
@@ -241,7 +241,7 @@ export async function fetchUnitAsetDashboard(
   const pendingRows = (pendingQueueRaw ?? []) as Array<{
     id: string;
     ticket_no: string;
-    asset_name: string;
+    asset_type: string;
     category: AssetCategory | null;
     created_at: string;
     created_by: string;
@@ -292,7 +292,7 @@ export async function fetchUnitAsetDashboard(
   const pendingQueue: PendingQueueRow[] = pendingRows.map((row) => ({
     id: row.id,
     ticket_no: row.ticket_no,
-    asset_name: row.asset_name,
+    asset_name: row.asset_type,
     requester_name: nameById.get(row.created_by) ?? "—",
     age_days: Math.floor(diffDays(now, row.created_at)),
     category: row.category,
