@@ -1,14 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Bricolage_Grotesque, Public_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { ThemeProvider } from "@/components/theme-provider";
 
-const inter = Inter({
+// Display: characterful grotesque for headings (kills the templated feel).
+const display = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-display",
+});
+
+// Body: Public Sans — a government-commissioned typeface, maximum legibility for Malay form/data text.
+const body = Public_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-body",
 });
 
 export const metadata: Metadata = {
@@ -29,12 +37,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ms" className={inter.variable}>
+    <html lang="ms" className={`${display.variable} ${body.variable}`}>
       <body className="antialiased font-sans" style={{ background: "var(--bg)", color: "var(--fg)" }}>
-        <ThemeProvider>
-          {children}
-          <Toaster position="top-center" richColors />
-        </ThemeProvider>
+        {children}
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

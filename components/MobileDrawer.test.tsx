@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { ThemeProvider } from "@/components/theme-provider";
 import { MobileDrawer } from "./MobileDrawer";
 
 vi.mock("next/navigation", () => ({
@@ -8,20 +7,13 @@ vi.mock("next/navigation", () => ({
 }));
 
 function renderDrawer(props: Partial<React.ComponentProps<typeof MobileDrawer>> = {}) {
-  vi.stubGlobal("matchMedia", vi.fn().mockReturnValue({
-    matches: false,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-  }));
   return render(
-    <ThemeProvider>
-      <MobileDrawer
-        open={true}
-        onOpenChange={() => {}}
-        role="admin"
-        {...props}
-      />
-    </ThemeProvider>
+    <MobileDrawer
+      open={true}
+      onOpenChange={() => {}}
+      role="admin"
+      {...props}
+    />
   );
 }
 

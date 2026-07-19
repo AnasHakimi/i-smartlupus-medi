@@ -91,8 +91,8 @@ export function KpiCard({
           <span
             className={cn(
               "inline-flex items-center gap-0.5 text-caption font-semibold",
-              deltaTone === "good" && "text-emerald-600 dark:text-emerald-400",
-              deltaTone === "bad" && "text-rose-600 dark:text-rose-400",
+              deltaTone === "good" && "text-emerald-600",
+              deltaTone === "bad" && "text-rose-600",
               deltaTone === "flat" && "text-[var(--fg-muted)]",
             )}
           >

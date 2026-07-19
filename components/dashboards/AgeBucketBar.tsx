@@ -9,7 +9,6 @@ import {
   Tooltip,
   Cell,
 } from "recharts";
-import { useTheme } from "@/components/theme-provider";
 import type { AgeBuckets } from "@/lib/dashboard/unit-aset";
 
 interface AgeBucketBarProps {
@@ -24,8 +23,6 @@ const BUCKET_META: { key: keyof AgeBuckets; label: string; cssVar: string }[] = 
 ];
 
 export function AgeBucketBar({ buckets }: AgeBucketBarProps) {
-  const { resolvedTheme: _resolvedTheme } = useTheme();
-  void _resolvedTheme; // re-render on theme change so CSS vars resolve
   const axis = "var(--fg-muted)";
 
   const data = BUCKET_META.map(({ key, label, cssVar }) => ({

@@ -17,10 +17,10 @@ const sizes: Record<Size, string> = {
 };
 
 const roleColors: Record<Role, string> = {
-  pemohon:   "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
-  penyemak:  "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
-  pelulus:   "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300",
-  pentadbir: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300",
+  pemohon:   "bg-slate-200 text-slate-700",
+  penyemak:  "bg-blue-100 text-blue-800",
+  pelulus:   "bg-indigo-100 text-indigo-800",
+  pentadbir: "bg-emerald-100 text-emerald-800",
 };
 
 function initials(name: string): string {
@@ -30,7 +30,7 @@ function initials(name: string): string {
 }
 
 export function Avatar({ name, role, size = "md", className }: AvatarProps) {
-  const color = role ? roleColors[role] : "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300";
+  const color = role ? roleColors[role] : "bg-slate-200 text-slate-700";
   return (
     <span
       aria-label={name}

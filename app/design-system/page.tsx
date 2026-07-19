@@ -20,7 +20,6 @@ import { Chip } from "@/components/ui/chip";
 import { ListItem } from "@/components/ui/list-item";
 import { BentoCard } from "@/components/ui/bento-card";
 import { Modal } from "@/components/ui/modal";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Stat } from "@/components/ui/stat";
 import { Avatar } from "@/components/ui/avatar";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -47,7 +46,7 @@ export default function DesignSystemPage() {
   return (
     <div className="min-h-dvh">
       {/* Sticky page chrome — solid branded emerald */}
-      <header className="sticky top-0 z-30 bg-emerald-600 dark:bg-emerald-800 text-white shadow-sm">
+      <header className="sticky top-0 z-30 bg-emerald-600 text-white shadow-sm">
         <div className="max-w-5xl mx-auto px-6 md:px-10 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-footnote">
             <span className="font-bold text-white tracking-tight">i-SMARTLUPUS</span>
@@ -56,7 +55,6 @@ export default function DesignSystemPage() {
             <span aria-hidden className="text-white/50">/</span>
             <span className="text-white">Primitive Demo</span>
           </div>
-          <ThemeToggle surface="brand" />
         </div>
       </header>
 
