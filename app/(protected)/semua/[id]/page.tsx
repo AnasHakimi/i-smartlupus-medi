@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowLeft, FileText, Camera, Info, History } from "lucide-react";
+import { FileText, Camera, Info, History } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
 import type { DisposalTicket, AuditLog, Profile } from "@/lib/supabase/types";
@@ -150,29 +150,18 @@ export default function TicketDetailPage() {
   if (!ticket) return (
     <div className="py-20 text-center space-y-4">
       <p className="text-body text-[var(--destructive)]">Tiket tidak ditemui.</p>
-      <Button variant="secondary" onClick={() => router.back()}>Kembali</Button>
+      <Button variant="secondary" onClick={() => router.push("/semua")}>Kembali ke Senarai</Button>
     </div>
   );
 
   return (
     <div className="space-y-6 animate-in">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button
-          variant="secondary"
-          size="md"
-          className="h-9 w-9 p-0 rounded-md shrink-0"
-          onClick={() => router.back()}
-          aria-label="Kembali"
-        >
-          <ArrowLeft size={18} />
-        </Button>
-        <div className="flex flex-1 items-center gap-3 min-w-0">
-          <span className="text-title-2 font-semibold text-[var(--fg)] tabular-nums truncate tracking-tight">
-            {ticket.ticket_no}
-          </span>
-          <StatusChip status={ticket.status} />
-        </div>
+      <div className="flex items-center gap-3 min-w-0">
+        <span className="text-title-2 font-semibold text-[var(--fg)] tabular-nums truncate tracking-tight">
+          {ticket.ticket_no}
+        </span>
+        <StatusChip status={ticket.status} />
       </div>
 
       {/* Main Info Card */}

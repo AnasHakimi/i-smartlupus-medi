@@ -46,9 +46,9 @@ export function Modal({ trigger, title, description, children, className }: Moda
               <button
                 type="button"
                 aria-label="Tutup"
-                className="-mr-2 p-2 rounded-md text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] transition-colors"
+                className="-mr-1 p-2.5 rounded-md text-[var(--fg)] hover:bg-[var(--primary-tint)] transition-colors"
               >
-                <X className="h-4 w-4" />
+                <X className="h-7 w-7" strokeWidth={2.5} />
               </button>
             </Dialog.Close>
           </div>
