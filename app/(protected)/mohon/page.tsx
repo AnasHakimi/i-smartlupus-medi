@@ -1,16 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Send, AlertCircle, Camera, FileText } from "lucide-react";
+import NextImage from "next/image";
+import { Send, AlertCircle, Camera, FileText, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
 import type { AssetCondition, AssetCategory, AssetSubCategory } from "@/lib/supabase/types";
 import { ASSET_CONDITIONS, ASSET_CATEGORIES, ASSET_SUB_CATEGORIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import {
+  validatePhotoFile,
+  validateBorangFile,
+  borangExtension,
+  photoStoragePath,
+  borangStoragePath,
+  canSubmitMohon,
+} from "@/lib/disposal/upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+async function compressImage(file: File, maxWidth = 800, quality = 0.7): Promise<Blob> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(img.src);
+      const canvas = document.createElement("canvas");
+      const ratio = Math.min(maxWidth / img.width, 1);
+      canvas.width = img.width * ratio;
+      canvas.height = img.height * ratio;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => resolve(blob!), "image/jpeg", quality);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
 
 export default function MohonPage() {
   const router = useRouter();
@@ -27,11 +53,65 @@ export default function MohonPage() {
   const [location, setLocation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Files are held in memory while filling the form; uploaded after the ticket
+  // is created on submit, so an abandoned form never orphans storage objects.
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [borangFile, setBorangFile] = useState<File | null>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const borangInputRef = useRef<HTMLInputElement>(null);
+
+  function selectSubCategory(sub: AssetSubCategory) {
+    setSubCategory(sub);
+    // Borang CA only applies to alat_perubatan; drop a held file if switching away.
+    if (sub !== "alat_perubatan") {
+      setBorangFile(null);
+      if (borangInputRef.current) borangInputRef.current.value = "";
+    }
+  }
+
+  function handlePhotoPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const result = validatePhotoFile(file);
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhotoFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  }
+
+  function handlePhotoRemove() {
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    if (photoInputRef.current) photoInputRef.current.value = "";
+  }
+
+  function handleBorangPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const result = validateBorangFile(file);
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+    setBorangFile(file);
+  }
+
+  function handleBorangRemove() {
+    setBorangFile(null);
+    if (borangInputRef.current) borangInputRef.current.value = "";
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!assetType.trim()) {
-      toast.error("Sila masukkan jenis/jenama/model aset.");
+    const gate = canSubmitMohon({ assetType, subCategory, hasBorang: !!borangFile });
+    if (!gate.ok) {
+      toast.error(gate.error);
       return;
     }
 
@@ -66,6 +146,43 @@ export default function MohonPage() {
       if (insertError || !ticket) {
         toast.error("Permohonan gagal dihantar. Sila cuba lagi.");
         return;
+      }
+
+      // Ticket exists — now upload the held files keyed by its id.
+      if (photoFile) {
+        try {
+          const compressed = await compressImage(photoFile);
+          const path = photoStoragePath(ticket.id);
+          const { error: uploadError } = await supabase.storage
+            .from("disposal-files")
+            .upload(path, compressed, { upsert: true, contentType: "image/jpeg" });
+          if (uploadError) throw uploadError;
+          const { error: attachError } = await supabase.rpc("attach_disposal_photo", {
+            p_ticket_id: ticket.id,
+            p_image_path: path,
+          });
+          if (attachError) throw attachError;
+        } catch {
+          toast.error("Permohonan dihantar, tetapi foto gagal dimuat naik.");
+        }
+      }
+
+      if (borangFile) {
+        try {
+          const ext = borangExtension(borangFile.type);
+          const path = borangStoragePath(ticket.id, ext);
+          const { error: uploadError } = await supabase.storage
+            .from("disposal-files")
+            .upload(path, borangFile, { upsert: true, contentType: borangFile.type });
+          if (uploadError) throw uploadError;
+          const { error: attachError } = await supabase.rpc("attach_disposal_borang_ca", {
+            p_ticket_id: ticket.id,
+            p_borang_path: path,
+          });
+          if (attachError) throw attachError;
+        } catch {
+          toast.error("Permohonan dihantar, tetapi Borang CA gagal dimuat naik.");
+        }
       }
 
       toast.success(`Permohonan ${ticket.ticket_no} berjaya dihantar!`);
@@ -135,7 +252,7 @@ export default function MohonPage() {
                     <button
                       key={sub}
                       type="button"
-                      onClick={() => setSubCategory(sub)}
+                      onClick={() => selectSubCategory(sub)}
                       className={cn(
                         "flex items-center gap-3 px-4 h-12 rounded-md border text-body transition-all active:scale-[0.98]",
                         isActive
@@ -157,13 +274,50 @@ export default function MohonPage() {
             </div>
 
             {subCategory === "alat_perubatan" && (
-              <div className="rounded-md border border-[var(--primary)] bg-[var(--primary-tint)] p-4 space-y-1">
-                <p className="text-subhead font-semibold text-[var(--primary)] flex items-center gap-2">
-                  <FileText size={16} /> Borang CA (Laporan Kerosakan Aset)
-                </p>
-                <p className="text-footnote text-[var(--fg-muted)]">
-                  Wajib dimuat naik selepas permohonan dihantar, di halaman butiran tiket.
-                </p>
+              <div className="rounded-md border border-[var(--primary)] bg-[var(--primary-tint)] p-4 space-y-3">
+                <div className="space-y-1">
+                  <p className="text-subhead font-semibold text-[var(--primary)] flex items-center gap-2">
+                    <FileText size={16} /> Borang CA (Laporan Kerosakan Aset)
+                    <span className="text-[var(--destructive)]" aria-hidden="true">*</span>
+                  </p>
+                  <p className="text-footnote text-[var(--fg-muted)]">
+                    Wajib dimuat naik untuk aset alat perubatan sebelum menghantar permohonan.
+                  </p>
+                </div>
+
+                {borangFile ? (
+                  <div className="flex items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--surface)] p-3">
+                    <FileText size={18} className="text-[var(--primary)] shrink-0" />
+                    <span className="text-footnote font-medium text-[var(--fg)] truncate flex-1">
+                      {borangFile.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleBorangRemove}
+                      className="text-[var(--destructive)] hover:opacity-70 transition-opacity active:scale-95 shrink-0"
+                      aria-label="Buang Borang CA"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => borangInputRef.current?.click()}
+                    className="w-full flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-[var(--border)] bg-[var(--surface)] py-6 text-[var(--fg-muted)] hover:border-[var(--primary)] hover:bg-[var(--primary-tint)] hover:text-[var(--primary)] transition-all active:scale-[0.99]"
+                  >
+                    <FileText className="h-6 w-6" />
+                    <span className="text-subhead font-semibold">Muat Naik Borang CA</span>
+                    <span className="text-caption opacity-60">Format PDF, JPG atau PNG (Maks 10MB)</span>
+                  </button>
+                )}
+                <input
+                  ref={borangInputRef}
+                  type="file"
+                  accept="application/pdf,image/jpeg,image/png"
+                  className="hidden"
+                  onChange={handleBorangPick}
+                />
               </div>
             )}
 
@@ -260,13 +414,52 @@ export default function MohonPage() {
                 Foto Aset (Untuk Dilupuskan)
               </span>
               <p className="text-footnote text-[var(--fg-muted)] mb-4">
-                Sila ambil gambar aset sebagai bukti keadaan semasa. Anda boleh memuat naik foto selepas menghantar permohonan di halaman butiran tiket.
+                Sila ambil gambar aset sebagai bukti keadaan semasa.
               </p>
-              <div className="p-4 rounded-md bg-[var(--bg)] border border-[var(--border)] border-dashed text-center">
-                 <p className="text-footnote text-[var(--fg-muted)] italic">
-                   Fungsi ambil foto di sini akan diaktifkan sebaik sahaja permohonan dihantar.
-                 </p>
-              </div>
+
+              {photoPreview ? (
+                <div className="relative group animate-in">
+                  <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden border border-[var(--border)]">
+                    <NextImage
+                      src={photoPreview}
+                      alt="Pratonton foto aset"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handlePhotoRemove}
+                    className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm text-[var(--destructive)] hover:bg-[var(--destructive)] hover:text-white transition-all active:scale-95"
+                    aria-label="Buang gambar"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => photoInputRef.current?.click()}
+                  className="w-full flex flex-col items-center justify-center gap-3 rounded-md border-2 border-dashed border-[var(--border)] bg-[var(--surface)] py-10 text-[var(--fg-muted)] hover:border-[var(--primary)] hover:bg-[var(--primary-tint)] hover:text-[var(--primary)] transition-all active:scale-[0.99]"
+                >
+                  <div className="p-4 rounded-full bg-[var(--bg)] text-[var(--fg-muted)]">
+                    <Camera className="h-8 w-8" />
+                  </div>
+                  <div className="text-center space-y-1">
+                    <span className="text-body font-semibold">Ambil Foto Aset</span>
+                    <p className="text-caption opacity-60">Format JPG atau PNG (Maks 5MB)</p>
+                  </div>
+                </button>
+              )}
+              <input
+                ref={photoInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={handlePhotoPick}
+              />
             </div>
           </div>
 
