@@ -5,51 +5,49 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { icToEmail, validateIc } from "@/lib/utils";
-import { formatIcProgressive } from "@/lib/format-ic-progressive";
+import { isValidEmail } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [ic, setIc] = useState("");
-  const [icError, setIcError] = useState<string | undefined>(undefined);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState<string | undefined>(undefined);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  function handleIcChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const digits = e.target.value.replace(/\D/g, "").slice(0, 12);
-    setIc(digits);
-    if (icError) setIcError(undefined);
+  function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setEmail(e.target.value);
+    if (emailError) setEmailError(undefined);
   }
 
-  function handleIcBlur() {
-    if (ic.length === 0) {
-      setIcError(undefined);
+  function handleEmailBlur() {
+    if (email.length === 0) {
+      setEmailError(undefined);
       return;
     }
-    if (!validateIc(ic)) {
-      setIcError("No. KP mestilah 12 digit.");
+    if (!isValidEmail(email)) {
+      setEmailError("Alamat e-mel tidak sah.");
     }
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!validateIc(ic)) {
-      toast.error("No. Kad Pengenalan mestilah 12 digit.");
+    if (!isValidEmail(email)) {
+      toast.error("Sila masukkan alamat e-mel yang sah.");
       return;
     }
 
     setLoading(true);
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({
-      email: icToEmail(ic),
+      email: email.trim(),
       password,
     });
     if (error) {
-      toast.error("No. KP atau kata laluan tidak sah.");
+      toast.error("E-mel atau kata laluan tidak sah.");
       setLoading(false);
       return;
     }
@@ -78,23 +76,23 @@ export default function LoginPage() {
               Selamat datang
             </h2>
             <p className="mt-1 text-body text-[var(--fg-muted)]">
-              Log masuk dengan No. Kad Pengenalan.
+              Log masuk dengan e-mel.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              id="ic"
-              label="No. Kad Pengenalan"
-              inputMode="numeric"
+              id="email"
+              label="E-mel"
+              type="email"
+              inputMode="email"
               autoComplete="username"
-              placeholder="Cth: 900101011234"
-              value={formatIcProgressive(ic)}
-              onChange={handleIcChange}
-              onBlur={handleIcBlur}
-              error={icError}
+              placeholder="Cth: nama@hospital.gov.my"
+              value={email}
+              onChange={handleEmailChange}
+              onBlur={handleEmailBlur}
+              error={emailError}
               required
-              maxLength={14}
             />
             <Input
               id="password"
@@ -120,7 +118,7 @@ export default function LoginPage() {
               type="submit"
               size="lg"
               loading={loading}
-              disabled={loading || ic.length !== 12 || password.length === 0}
+              disabled={loading || email.length === 0 || password.length === 0}
               className="w-full mt-2"
             >
               Log Masuk

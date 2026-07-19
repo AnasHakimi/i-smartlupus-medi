@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Building, CreditCard, ShieldCheck } from "lucide-react";
+import { Building, Mail, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/lib/supabase/types";
 import { ROLE_LABELS } from "@/lib/constants";
-import { formatIc } from "@/lib/utils";
 import SkeletonPulse from "@/components/Skeleton";
 
 function PageSkeleton() {
@@ -86,17 +85,17 @@ export default function ProfilPage() {
 
         {/* Info Card */}
         <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] shadow-none p-5 space-y-6">
-          {/* IC Number */}
+          {/* Email */}
           <div className="flex gap-4">
             <div className="h-10 w-10 rounded-md bg-[var(--bg)] flex items-center justify-center shrink-0">
-              <CreditCard className="h-5 w-5 text-[var(--fg-muted)]" />
+              <Mail className="h-5 w-5 text-[var(--fg-muted)]" />
             </div>
             <div className="space-y-0.5">
               <p className="text-caption font-bold uppercase tracking-wider text-[var(--fg-muted)]">
-                No. Kad Pengenalan
+                E-mel
               </p>
-              <p className="text-body font-semibold text-[var(--fg)] tabular-nums">
-                {formatIc(profile.ic_number)}
+              <p className="text-body font-semibold text-[var(--fg)]">
+                {profile.email}
               </p>
             </div>
           </div>
