@@ -10,7 +10,6 @@ import {
   ReferenceLine,
   Cell,
 } from "recharts";
-import { useTheme } from "@/components/theme-provider";
 import type { HistogramBucket } from "@/lib/dashboard/unit-aset";
 
 interface DurationHistogramProps {
@@ -31,10 +30,9 @@ function medianBucketLabel(medianHours: number, buckets: HistogramBucket[]): str
 }
 
 export function DurationHistogram({ buckets, medianHours }: DurationHistogramProps) {
-  const { resolvedTheme } = useTheme();
   const axis = "var(--fg-muted)";
-  const barColor = resolvedTheme === "dark" ? "#34d399" : "#059669";
-  const medianColor = resolvedTheme === "dark" ? "#fb7185" : "#e11d48";
+  const barColor = "#059669";
+  const medianColor = "#e11d48";
   const medianLabel = medianBucketLabel(medianHours, buckets);
 
   return (

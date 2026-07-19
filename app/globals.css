@@ -36,6 +36,7 @@
     --chip-rejected-fg: #B91C1C;                 /* red-700 */
 
     --ring: rgba(5, 150, 105, 0.5);
+    --overlay: rgba(6, 46, 34, 0.45);        /* emerald-tinted scrim for modals/drawers */
 
     /* Tactile shadows & glows */
     --shadow-tactile: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 3px 1px rgba(0, 0, 0, 0.03);
@@ -72,69 +73,6 @@
     --kpi-violet-fg: #6D28D9;
   }
 
-  .dark {
-    --bg: oklch(0.130 0.008 160);
-    --surface: oklch(0.200 0.010 160);
-    --surface-elevated: oklch(0.265 0.012 160);
-    --surface-tinted: oklch(0.235 0.025 160); /* branded emerald-tinted surface */
-    --fg: oklch(0.950 0.008 160);
-    --fg-muted: oklch(0.640 0.010 160);
-    --border: oklch(0.290 0.012 160);
-    --border-strong: oklch(0.360 0.020 160);
-
-    --primary: #34D399;                      /* emerald-400 */
-    --primary-hover: #10B981;                /* emerald-500 */
-    --primary-tint: rgba(52, 211, 153, 0.12);
-    --on-primary: #022C22;                   /* emerald-950 dark text */
-
-    --destructive: #F87171;
-    --destructive-tint: rgba(248, 113, 113, 0.12);
-    --on-destructive: #0F172A;
-
-    /* Dark: emerald progression (light hint → solid glow) */
-    --chip-pending-bg: rgba(148, 163, 184, 0.15);  /* slate-400 @ 15% */
-    --chip-pending-fg: #94A3B8;                    /* slate-400 */
-    --chip-reviewing-bg: rgba(16, 185, 129, 0.12); /* emerald-500 @ 12% */
-    --chip-reviewing-fg: #A7F3D0;                  /* emerald-200 */
-    --chip-executing-bg: rgba(16, 185, 129, 0.22); /* emerald-500 @ 22% */
-    --chip-executing-fg: #6EE7B7;                  /* emerald-300 */
-    --chip-done-bg: rgba(52, 211, 153, 0.35);      /* emerald-400 @ 35% — strongest */
-    --chip-done-fg: #D1FAE5;                       /* emerald-100 */
-    --chip-rejected-bg: rgba(239, 68, 68, 0.18);   /* red-500 @ 18% */
-    --chip-rejected-fg: #FCA5A5;                   /* red-300 */
-
-    --ring: rgba(52, 211, 153, 0.6);
-
-    /* Tactile shadows & glows - Dark */
-    --shadow-tactile: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.2);
-    --shadow-inner-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-    --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
-
-    /* Dashboard dimensional palettes (dark mode = 400-level marks, deep tints) */
-    --dim-category-modal: #818CF8;       /* indigo-400 */
-    --dim-category-rendah: #2DD4BF;      /* teal-400 */
-    --dim-condition-rosak: #FB7185;      /* rose-400 */
-    --dim-condition-usang: #FBBF24;      /* amber-400 */
-    --dim-method-jualan: #34D399;        /* emerald-400 */
-    --dim-method-lelong: #38BDF8;        /* sky-400 */
-    --dim-method-musnah: #F87171;        /* red-400 */
-    --dim-method-serah: #A78BFA;         /* violet-400 */
-    --dim-severity-fresh: #34D399;       /* emerald-400 */
-    --dim-severity-warm: #FBBF24;        /* amber-400 */
-    --dim-severity-aging: #FB923C;       /* orange-400 */
-    --dim-severity-critical: #FB7185;    /* rose-400 */
-    --kpi-emerald-bg: rgba(16, 185, 129, 0.10);
-    --kpi-emerald-fg: #6EE7B7;
-    --kpi-amber-bg: rgba(245, 158, 11, 0.10);
-    --kpi-amber-fg: #FCD34D;
-    --kpi-sky-bg: rgba(14, 165, 233, 0.10);
-    --kpi-sky-fg: #7DD3FC;
-    --kpi-rose-bg: rgba(244, 63, 94, 0.10);
-    --kpi-rose-fg: #FDA4AF;
-    --kpi-violet-bg: rgba(139, 92, 246, 0.10);
-    --kpi-violet-fg: #C4B5FD;
-  }
-
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -145,6 +83,11 @@
   body {
     background-color: var(--bg);
     color: var(--fg);
+  }
+
+  /* Headings carry the display face; body text stays on Public Sans. */
+  h1, h2, h3 {
+    font-family: var(--font-display);
   }
 
   .tabular-nums {

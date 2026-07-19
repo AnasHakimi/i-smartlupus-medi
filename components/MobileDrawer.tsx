@@ -45,7 +45,7 @@ export function MobileDrawer({ open, onOpenChange, role }: MobileDrawerProps) {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm animate-fade-in md:hidden" />
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-[var(--overlay)] backdrop-blur-sm animate-fade-in md:hidden" />
         <Dialog.Content
           className="fixed top-0 left-0 bottom-0 z-50 w-72 bg-[var(--surface)] text-[var(--fg)] shadow-xl animate-slide-in-left md:hidden focus:outline-none flex flex-col"
           aria-describedby={undefined}
@@ -75,9 +75,9 @@ export function MobileDrawer({ open, onOpenChange, role }: MobileDrawerProps) {
               <button
                 type="button"
                 aria-label="Tutup"
-                className="-mr-2 p-2 rounded-md text-[var(--fg-muted)] hover:bg-[var(--primary-tint)] transition-colors shrink-0"
+                className="-mr-1 p-2.5 rounded-md text-[var(--fg)] hover:bg-[var(--primary-tint)] transition-colors shrink-0"
               >
-                <X className="h-4 w-4" />
+                <X className="h-7 w-7" strokeWidth={2.5} />
               </button>
             </Dialog.Close>
           </div>
