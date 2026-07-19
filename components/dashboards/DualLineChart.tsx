@@ -10,7 +10,6 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-import { useTheme } from "@/components/theme-provider";
 import type { DailyFlow } from "@/lib/dashboard/unit-aset";
 
 interface DualLineChartProps {
@@ -31,11 +30,10 @@ export function DualLineChart({
   intakeLabel = "Permohonan masuk",
   reviewedLabel = "Disemak oleh saya",
 }: DualLineChartProps) {
-  const { resolvedTheme } = useTheme();
-  const grid = resolvedTheme === "dark" ? "#1f2937" : "#e5e7eb";
-  const axis = resolvedTheme === "dark" ? "#9ca3af" : "#6b7280";
-  const intakeColor = resolvedTheme === "dark" ? "#94a3b8" : "#64748b";
-  const reviewColor = resolvedTheme === "dark" ? "#34d399" : "#059669";
+  const grid = "#e5e7eb";
+  const axis = "#6b7280";
+  const intakeColor = "#64748b";
+  const reviewColor = "#059669";
 
   return (
     <div className="h-64 w-full">

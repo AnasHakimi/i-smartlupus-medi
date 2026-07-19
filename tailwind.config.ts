@@ -11,7 +11,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: [
-          "var(--font-inter)",
+          "var(--font-body)",
           "-apple-system",
           "BlinkMacSystemFont",
           "SF Pro Text",
@@ -19,6 +19,7 @@ const config: Config = {
           "Roboto",
           "sans-serif",
         ],
+        display: ["var(--font-display)", "var(--font-body)", "sans-serif"],
       },
       colors: {
         slate: {
@@ -42,10 +43,10 @@ const config: Config = {
         subhead: ["0.875rem", { lineHeight: "1.25rem", letterSpacing: "0.01em" }],
         callout: ["0.9375rem", { lineHeight: "1.375rem" }],
         body: ["1rem", { lineHeight: "1.5rem" }],
-        "title-3": ["1.0625rem", { lineHeight: "1.5rem", letterSpacing: "-0.01em" }],
-        "title-2": ["1.25rem", { lineHeight: "1.75rem", letterSpacing: "-0.015em" }],
-        "title-1": ["1.5rem", { lineHeight: "2rem", letterSpacing: "-0.02em" }],
-        display: ["2rem", { lineHeight: "2.5rem", letterSpacing: "-0.025em" }],
+        "title-3": ["1.125rem", { lineHeight: "1.5rem", letterSpacing: "-0.01em" }],
+        "title-2": ["1.375rem", { lineHeight: "1.75rem", letterSpacing: "-0.02em" }],
+        "title-1": ["1.75rem", { lineHeight: "2.125rem", letterSpacing: "-0.025em" }],
+        display: ["2.25rem", { lineHeight: "2.5rem", letterSpacing: "-0.03em" }],
       },
       borderRadius: {
         sm: "6px",
@@ -59,8 +60,7 @@ const config: Config = {
         sm: "0 1px 2px rgba(15, 23, 42, 0.04)",
         md: "0 4px 6px rgba(15, 23, 42, 0.05), 0 2px 4px rgba(15, 23, 42, 0.04)",
         lg: "0 10px 15px rgba(15, 23, 42, 0.08), 0 4px 6px rgba(15, 23, 42, 0.04)",
-        ring: "0 0 0 4px rgba(37, 99, 235, 0.12)",
-        "ring-dark": "0 0 0 4px rgba(96, 165, 250, 0.18)",
+        ring: "0 0 0 4px rgba(5, 150, 105, 0.15)",
       },
       transitionTimingFunction: {
         "ios-out": "cubic-bezier(0.16, 1, 0.3, 1)",

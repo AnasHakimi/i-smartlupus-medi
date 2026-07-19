@@ -19,7 +19,7 @@ export function Modal({ trigger, title, description, children, className }: Moda
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-40 bg-[var(--overlay)] backdrop-blur-sm animate-fade-in"
         />
         <Dialog.Content
           className={cn(

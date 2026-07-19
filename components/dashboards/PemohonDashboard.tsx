@@ -16,7 +16,6 @@ import { getGreeting } from "@/lib/greeting";
 import { DashboardSkeleton } from "@/components/Skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import StatusChart from "@/components/StatusChart";
-import { useTheme } from "@/components/theme-provider";
 import type { Profile } from "@/lib/supabase/types";
 import {
   fetchPemohonDashboard,
@@ -52,7 +51,7 @@ function chartColors(mode: "light" | "dark") {
 
 export function PemohonDashboard({ profile }: PemohonDashboardProps) {
   const [data, setData] = useState<PemohonDashboardData | null>(null);
-  const { resolvedTheme } = useTheme();
+  const resolvedTheme = "light" as const;
 
   useEffect(() => {
     fetchPemohonDashboard(profile.id).then(setData).catch((err) => {

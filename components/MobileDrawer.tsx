@@ -45,7 +45,7 @@ export function MobileDrawer({ open, onOpenChange, role }: MobileDrawerProps) {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm animate-fade-in md:hidden" />
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-[var(--overlay)] backdrop-blur-sm animate-fade-in md:hidden" />
         <Dialog.Content
           className="fixed top-0 left-0 bottom-0 z-50 w-72 bg-[var(--surface)] text-[var(--fg)] shadow-xl animate-slide-in-left md:hidden focus:outline-none flex flex-col"
           aria-describedby={undefined}

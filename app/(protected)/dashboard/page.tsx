@@ -12,7 +12,6 @@ import { BentoCard } from "@/components/ui/bento-card";
 import { Stat } from "@/components/ui/stat";
 import { ClipboardList, Clock, RefreshCw, CheckCircle2 } from "lucide-react";
 import StatusChart from "@/components/StatusChart";
-import { useTheme } from "@/components/theme-provider";
 import { ListItem } from "@/components/ui/list-item";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusChip } from "@/components/StatusChip";
@@ -91,7 +90,7 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [counts, setCounts] = useState<Counts>(emptyCounts);
   const [recent, setRecent] = useState<DisposalTicket[]>([]);
-  const { resolvedTheme } = useTheme();
+  const resolvedTheme = "light" as const;
   const router = useRouter();
 
   useEffect(() => {
