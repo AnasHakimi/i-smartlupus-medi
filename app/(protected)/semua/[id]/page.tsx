@@ -8,13 +8,12 @@ import { ArrowLeft, FileText, Camera, Info, History } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { DisposalTicket, AuditLog, Profile } from "@/lib/supabase/types";
 import { ASSET_CONDITIONS, DISPOSAL_METHODS, ASSET_CATEGORIES, ASSET_SUB_CATEGORIES } from "@/lib/constants";
-import { cn, formatDateTime, formatCurrency } from "@/lib/utils";
+import { formatDateTime, formatCurrency } from "@/lib/utils";
 import { StatusChip } from "@/components/StatusChip";
 import TicketActions from "@/components/TicketActions";
 import CertificateGenerator from "@/components/CertificateGenerator";
 import { Button } from "@/components/ui/button";
 import SkeletonPulse from "@/components/Skeleton";
-import PhotoUpload from "@/components/PhotoUpload";
 
 const SIGNED_URL_TTL_SECONDS = 10 * 60;
 
@@ -99,6 +98,7 @@ export default function TicketDetailPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [assetPhotoUrl, setAssetPhotoUrl] = useState<string | null>(null);
   const [certificateUrl, setCertificateUrl] = useState<string | null>(null);
+  const [borangUrl, setBorangUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const loadData = useCallback(async () => {
@@ -121,13 +121,15 @@ export default function TicketDetailPage() {
       const ticketRow = t as DisposalTicket;
       setTicket(ticketRow);
 
-      const [photoUrl, certUrl] = await Promise.all([
+      const [photoUrl, certUrl, bUrl] = await Promise.all([
         createSignedDisposalFileUrl(supabase, ticketRow.image_url),
         createSignedDisposalFileUrl(supabase, ticketRow.cert_url),
+        createSignedDisposalFileUrl(supabase, ticketRow.borang_ca_url),
       ]);
 
       setAssetPhotoUrl(photoUrl);
       setCertificateUrl(certUrl);
+      setBorangUrl(bUrl);
     }
 
     const { data: a } = await supabase
@@ -184,12 +186,8 @@ export default function TicketDetailPage() {
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-6">
           <div className="space-y-1">
-            <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Nama Aset</p>
-            <p className="text-body font-medium text-[var(--fg)] leading-tight">{ticket.asset_name}</p>
-          </div>
-          <div className="space-y-1">
             <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Jenis Aset</p>
-            <p className="text-body font-medium text-[var(--fg)] leading-tight">{ticket.asset_type || "-"}</p>
+            <p className="text-body font-medium text-[var(--fg)] leading-tight">{ticket.asset_type}</p>
           </div>
           <div className="space-y-1">
             <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Kategori</p>
@@ -208,8 +206,8 @@ export default function TicketDetailPage() {
             <p className="text-body font-medium text-[var(--fg)] tabular-nums leading-tight">{ticket.serial_no || "-"}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">No. Inventori</p>
-            <p className="text-body font-medium text-[var(--fg)] tabular-nums leading-tight">{ticket.inventory_id || "-"}</p>
+            <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">No. Aset Radicare</p>
+            <p className="text-body font-medium text-[var(--fg)] leading-tight">{ticket.radicare_asset_no || "-"}</p>
           </div>
           <div className="space-y-1">
             <p className="text-caption font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Tarikh Perolehan</p>
@@ -248,36 +246,45 @@ export default function TicketDetailPage() {
           </div>
         )}
 
-        {/* Photo Upload Section */}
-        {!assetPhotoUrl && ticket.status !== 'selesai' && (
-          <div className="mt-8 space-y-4">
-            <div className="flex items-center gap-1.5">
-              <Camera size={14} className="text-[var(--primary)]" />
-              <p className="text-caption font-bold uppercase tracking-wider text-[var(--fg-muted)]">Lampirkan Foto</p>
-            </div>
-            <PhotoUpload ticketId={ticket.id} onUploaded={() => loadData()} />
+        {/* Photo Display Section (view / download only) */}
+        <div className="mt-8 space-y-3">
+          <div className="flex items-center gap-1.5">
+            <Camera size={14} className="text-[var(--primary)]" />
+            <p className="text-caption font-bold uppercase tracking-wider text-[var(--fg-muted)]">Foto Aset (Untuk Dilupuskan)</p>
           </div>
-        )}
+          {assetPhotoUrl ? (
+            <>
+              <a href={assetPhotoUrl} target="_blank" rel="noopener noreferrer"
+                 className="relative block w-full aspect-[4/3] rounded-md overflow-hidden border border-[var(--border)] bg-[var(--bg)]">
+                <Image src={assetPhotoUrl} alt="Foto aset" fill className="object-cover" unoptimized />
+              </a>
+              <a href={assetPhotoUrl} target="_blank" rel="noopener noreferrer" className="block">
+                <Button variant="secondary" className="w-full gap-2 text-[var(--primary)]">
+                  <Camera size={18} /> Muat Turun Foto
+                </Button>
+              </a>
+            </>
+          ) : (
+            <p className="text-caption text-[var(--fg-muted)] italic">Foto aset tidak dimuat naik.</p>
+          )}
+        </div>
 
-        {/* Photo Display Section */}
-        {assetPhotoUrl && (
+        {ticket.sub_category === "alat_perubatan" && (
           <div className="mt-8 space-y-3">
             <div className="flex items-center gap-1.5">
-              <Camera size={14} className="text-[var(--primary)]" />
-              <p className="text-caption font-bold uppercase tracking-wider text-[var(--fg-muted)]">Foto Aset</p>
+              <FileText size={14} className="text-[var(--primary)]" />
+              <p className="text-caption font-bold uppercase tracking-wider text-[var(--fg-muted)]">
+                Borang CA (Laporan Kerosakan Aset)
+              </p>
             </div>
-            <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden border border-[var(--border)] bg-[var(--bg)]">
-              <Image src={assetPhotoUrl} alt="Foto aset" fill className="object-cover" unoptimized />
-            </div>
-            {ticket.status !== 'selesai' && (
-              <div className="pt-2">
-                 <p className="text-caption text-[var(--fg-muted)] italic">
-                   Untuk menukar foto, sila muat naik foto baru di bawah.
-                 </p>
-                 <div className="mt-2">
-                   <PhotoUpload ticketId={ticket.id} onUploaded={() => loadData()} />
-                 </div>
-              </div>
+            {borangUrl ? (
+              <a href={borangUrl} target="_blank" rel="noopener noreferrer" className="block">
+                <Button variant="secondary" className="w-full gap-2 text-[var(--primary)]">
+                  <FileText size={18} /> Muat Turun Borang CA
+                </Button>
+              </a>
+            ) : (
+              <p className="text-caption text-[var(--fg-muted)] italic">Borang CA tidak dimuat naik.</p>
             )}
           </div>
         )}

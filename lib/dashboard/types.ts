@@ -40,7 +40,7 @@ export interface LocationCount {
 export interface PendingQueueRow {
   id: string;
   ticket_no: string;
-  asset_name: string;
+  asset_name: string; // display alias, populated from disposal_tickets.asset_type
   requester_name: string;
   age_days: number;
   category: AssetCategory | null;

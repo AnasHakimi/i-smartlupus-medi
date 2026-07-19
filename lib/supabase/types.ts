@@ -26,13 +26,12 @@ export interface Profile {
 export interface DisposalTicket {
   id: string;
   ticket_no: string;
-  asset_name: string;
-  inventory_id: string | null;
   asset_condition: AssetCondition;
   category: AssetCategory | null;
   sub_category: AssetSubCategory | null;
   serial_no: string | null;
-  asset_type: string | null;
+  asset_type: string;
+  radicare_asset_no: string | null;
   purchase_date: string | null;
   purchase_price: number | null;
   location: string | null;
@@ -41,6 +40,7 @@ export interface DisposalTicket {
   rejection_reason: string | null;
   image_url: string | null;
   cert_url: string | null;
+  borang_ca_url: string | null;
   created_by: string;
   reviewed_by: string | null;
   completed_by: string | null;
