@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Users, UserPlus, Shield, Building, Mail, ChevronUp } from "lucide-react";
+import { Users, UserPlus, Shield, Building, Mail, X } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile, UserRole } from "@/lib/supabase/types";
@@ -154,10 +154,17 @@ export default function PenggunaPage() {
         <Button
           onClick={() => setShowForm((prev) => !prev)}
           variant={showForm ? "secondary" : "primary"}
-          className="shrink-0 gap-2"
+          className={showForm ? "shrink-0 h-9 w-9 p-0" : "shrink-0 gap-2"}
+          aria-label={showForm ? "Tutup borang" : undefined}
         >
-          {showForm ? <ChevronUp size={16} /> : <UserPlus size={16} />}
-          {showForm ? "Tutup" : "Daftar Baru"}
+          {showForm ? (
+            <X size={16} />
+          ) : (
+            <>
+              <UserPlus size={16} />
+              Daftar Baru
+            </>
+          )}
         </Button>
       </header>
 
